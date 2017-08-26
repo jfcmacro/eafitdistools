@@ -42,7 +42,7 @@ function linkDir {
 	    ln -s $HOME/$1  $HOME/$2 2>/dev/null
 	fi
     else
-	if [ -d $ALTHOME/$3/$1]; then
+	if [ -d $ALTHOME/$3/$1 ]; then
             if [ ! -h $HOME/$2 ]; then
                 ln -s $ALTHOME/$3/$1  $HOME/$2 2>/dev/null
             fi
