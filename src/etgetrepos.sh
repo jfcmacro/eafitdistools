@@ -95,12 +95,14 @@ done
 cd $HOME
 
 if [ -z "${JAVA_HOME}" ]; then
-    echo -n "java version?"
-    read -r JAVA_VERSION
-    appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bashrc
-    appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
+    JAVA_VERSION=$(ls /cygdrive/c/Program\ Files/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
+    if [ -n "${JAVA_VERSION}" ]; then
+	
+	appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bashrc
+	appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
 #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
-    source .bashrc
+	source .bashrc
+    fi
 fi
 
 for i in bin lib share include
@@ -115,13 +117,16 @@ linkDir Downloads descargas $USERNAME
 
 cd $HOME
 
-if  [ ! -x "$(command -v ewe)" ]
-then
-    echo "Installing ewe last version, it takes few minutes"
-    cabal update
-    cabal install ewe --prefix $(cygpath -w $HOME)
-    appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
-    source .bashrc
+if  [ ! -x "$(command -v ewe)" ]; then
+    if [ -x "$(command -v cabal)" ]; then
+	echo "Installing ewe last version, it takes few minutes, please wait."
+	cabal update
+	cabal install ewe --prefix $(cygpath -w $HOME)
+	appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+	source .bashrc
+    else
+	echo "Please install Haskell Platform before install ewe"
+    fi
 fi
 
 createDir $SUBLOWER
