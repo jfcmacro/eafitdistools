@@ -1,8 +1,8 @@
 #
-bin_SCRIPTS = etgetrepos
+bin_SCRIPTS = edtgetrepos
 CLEANFILES = $(bin_SCRIPTS)
-EXTRA_DIST = etgetrepos.sh
+EXTRA_DIST = edtgetrepos.sh
 
-etgetrepos: $(srcdir)/etgetrepos.sh
-	cp $(srcdir)/etgetrepos.sh etgetrepos
-	chmod +x etgetrepos
+edtgetrepos: $(srcdir)/edtgetrepos.sh
+	cp $(srcdir)/edtgetrepos.sh edtgetrepos
+	chmod +x edtgetrepos
