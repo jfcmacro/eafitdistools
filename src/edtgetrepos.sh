@@ -1,17 +1,20 @@
 #!/bin/env bash
 
 #
-# date: 11/08/2017
+# created: 11/08/2017
 # user: Juan Francisco Cardona Mc'Cormick (jfcmacro)
 # purpose: This program create a directory hierarchy
 #
-
+# Modifications:
+# 26/08/2017 - Generalizing the script in order to manage diferents OS.
+#
 
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
     echo "$mytolower"
 }
 
+OSNAME=`uname -s`
 USERNAME=`id -un`
 PREFIX="2447"
 REPO="$PREFIX$USERNAME"
@@ -52,7 +55,7 @@ function linkDir {
 
 function usage {
     echo "       $1 -h" >&2
-    echo "       $1 [-r <repo>] [-u <username>] [-p <prefix-repo>]" >&2
+    echo "       $1 [-r <repo>] [-u <username>] [-p <prefix-repo>] [-s <subject>]" >&2
     exit $2
 }
 
@@ -62,7 +65,7 @@ function appendFile {
 
 progname=$0
 
-while getopts ":ir:u:p:hs:" opt; do
+while getopts ":r:u:p:hs:" opt; do
     case $opt in
 	r)
 	    REPO=$OPTARG
@@ -94,27 +97,38 @@ done
 
 cd $HOME
 
-if [ -z "${JAVA_HOME}" ]; then
-    JAVA_VERSION=$(ls /cygdrive/c/Program\ Files/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
-    if [ -n "${JAVA_VERSION}" ]; then
-	
-	appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bashrc
-	appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
-#    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
-	source .bashrc
-    fi
-fi
+case $OSNAME in
+    CYGWIN*)
+        if [ -z "${JAVA_HOME}" ]; then
+            JAVA_VERSION=$(ls /cygdrive/c/Program\ Files/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
+            if [ -n "${JAVA_VERSION}" ]; then
 
-for i in bin lib share include
+	        appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bashrc
+	        appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
+                #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
+	        source .bashrc
+            fi
+        fi
+        ;;
+    *)
+        ;;
+esac
+
+for i in bin lib share include tmp
 do
     createDir $i
 done
 
-linkDir AppData appdata $USERNAME
-linkDir Documents docs $USERNAME
-linkDir Desktop escritorio $USERNAME
-linkDir Downloads descargas $USERNAME
-
+case $OSNAME in
+    CYGWIN*)
+        linkDir AppData appdata $USERNAME
+        linkDir Documents docs $USERNAME
+        linkDir Desktop escritorio $USERNAME
+        linkDir Downloads descargas $USERNAME
+        ;;
+    *)
+        ;;
+esac
 cd $HOME
 
 if  [ ! -x "$(command -v ewe)" ]; then
@@ -125,7 +139,7 @@ if  [ ! -x "$(command -v ewe)" ]; then
 	appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
 	source .bashrc
     else
-	echo "Please install Haskell Platform before install ewe"
+	echo "Please install Haskell Platform before install ewe" >&2
     fi
 fi
 
