@@ -1,0 +1,2 @@
+AUTOMAKE_OPTIONS = foreing
+SUBDIRS = src man 

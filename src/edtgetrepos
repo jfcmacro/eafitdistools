@@ -93,6 +93,8 @@ while getopts ":r:u:p:hs:" opt; do
     esac
 done
 
+# exit 0
+
 cd $HOME
 
 case $OSNAME in

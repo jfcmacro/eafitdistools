@@ -1,25 +1,48 @@
 #!/bin/env bash
 
 #
-# created: 11/08/2017
+# created: 28/08/2017
 # user: Juan Francisco Cardona Mc'Cormick (jfcmacro)
-# purpose: This program create a directory hierarchy
+# purpose: This program initializes the $HOME/.edtcfg file and the
+#          directory hierarchy.
 #
-# Modifications:
-# 26/08/2017 - Generalizing the script in order to manage diferents OS.
-#
+
+function getYear {
+    local thisYear=$(date +"%Y")
+    echo "$thisYear"
+}
+
+function getTerm {
+    local thisMonth=$(date +"%m")
+    local thisTerm=""
+    case $thisMonth in
+	0[1-6])
+	    thisTerm="01"
+	    ;;
+	0[7-9])
+	    thisTerm="02"
+	    ;;
+	1[0-2])
+	    thisTerm="02"
+	    ;;
+    esac
+    echo "$thisTerm"
+}
+
 
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
     echo "$mytolower"
 }
 
+EDT_CURRENT_TERM=$(getTerm)
+EDT_CURRENT_YEAR=$(getYear)
 OSNAME=`uname -s`
 USERNAME=`id -un`
 PREFIX="2447"
 REPO="$PREFIX$USERNAME"
-SUBJECT="ST0244"
-SUBLOWER=$(tolower $SUBJECT)
+COURSE="ST0244"
+SUBLOWER=$(tolower $COURSE)
 
 function createDir {
     if [ ! -d $1 ]
@@ -80,8 +103,8 @@ while getopts ":r:u:p:hs:" opt; do
 	    usage $progname 0
 	    ;;
 	s)
-	    SUBJECT=$OPTARG
-	    SUBLOWER=$(tolower $SUBJECT)
+	    COURSE=$OPTARG
+	    SUBLOWER=$(tolower $COURSE)
 	    ;;
 	\?)
 	    usage $progname 1
