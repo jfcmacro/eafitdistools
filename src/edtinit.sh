@@ -29,20 +29,30 @@ function getTerm {
     echo "$thisTerm"
 }
 
+function getVarMsg {
+    local myvar
+    echo -n $1
+    myvar=read
+    echo "$myvar"
+}
 
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
     echo "$mytolower"
 }
 
-EDT_CURRENT_TERM=$(getTerm)
-EDT_CURRENT_YEAR=$(getYear)
+function toupper {
+    local mytoupper=$(echo $1 | tr '[:lower:]' '[:upper:]')
+    echo "$mytoupper"
+}
+
+TERM=$(getTerm)
+YEAR=$(getYear)
 OSNAME=`uname -s`
 USERNAME=`id -un`
 PREFIX="2447"
-REPO="$PREFIX$USERNAME"
-COURSE="ST0244"
-SUBLOWER=$(tolower $COURSE)
+# REPOFORMAT="${PREFIX}${USERNAME}"
+VERSCTRL="svn"
 
 function createDir {
     if [ ! -d $1 ]
@@ -78,7 +88,7 @@ function linkDir {
 
 function usage {
     echo "       $1 -h" >&2
-    echo "       $1 [-r <repo>] [-u <username>] [-p <prefix-repo>] [-s <subject>]" >&2
+    echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
     exit $2
 }
 
@@ -88,23 +98,35 @@ function appendFile {
 
 progname=$0
 
-while getopts ":r:u:p:hs:" opt; do
+while getopts "b:c:g:n:p:r:u:v:" opt; do
     case $opt in
-	r)
-	    REPO=$OPTARG
+	b)
+	    URLBASE=$OPTARG
 	    ;;
-	u)
-	    USERNAME=$OPTARG
+	c)
+            COURSE=$(toupper $OPTARG)
+            COURSELOWER=$(tolower $OPTARG)
 	    ;;
-	p)
-	    PREFIX=$OPTARG
+	g)
+	    GROUP=$OPTARG
 	    ;;
 	h)
 	    usage $progname 0
 	    ;;
-	s)
-	    COURSE=$OPTARG
-	    SUBLOWER=$(tolower $COURSE)
+        n)
+            USERNAME=$OPTARG
+            ;;
+        p)
+            PREFIX=$OPTARG
+            ;;
+        r)
+            REPONAME=$OPTARG
+            ;;
+        u)
+            URLVERSCTRL=$OPTARG
+            ;;
+	v)
+	    VERSCTRL=$OPTARG
 	    ;;
 	\?)
 	    usage $progname 1
@@ -116,8 +138,26 @@ while getopts ":r:u:p:hs:" opt; do
     esac
 done
 
+if [ -f $HOME/.edtrc ]; then
+    echo "$HOME/.edtrc exits" >&2
+    exit 1
+fi
+
+if [ -z "${URLBASE}" -o -z "${COURSE}" -o -z "${GROUP}" -o -z "${URLVERSCTRL}" ]; then
+    echo "URLBASE=$URLBASE"
+    echo "COURSE=$COURSE"
+    echo "GROUP=$GROUP"
+    echo "URLVERSCTRL=$ULRVERSCTRL"
+    usage $progname 1
+fi
+
+if [ -z "${REPONAME}" ]; then
+    REPONAME=$PREFIX$USERNAME
+fi
+
 cd $HOME
 
+# Adding JAVA_HOME variables
 case $OSNAME in
     CYGWIN*)
         if [ -z "${JAVA_HOME}" ]; then
@@ -128,13 +168,34 @@ case $OSNAME in
 	        appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
                 #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
 	        source .bashrc
+            else
+                JAVA_VERSION=$(ls /cygdrive/c/Program\ Files\ \(x86\)/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
+                if [ - "${JAVA_VERSION}" ]; then
+                    appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files\ \(x86\)/Java/jdk$JAVA_VERSION/" .bashrc
+	            appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
+                    #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
+	            source .bashrc
+                else
+                    echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
+                fi
             fi
         fi
         ;;
     *)
+        if [ -z "${JAVA_HOME}" ]; then
+            if [ -x "$(command -v javac)" ]; then
+                TMP=$(command -v javac)
+                TMP2=$(dirname $TMP)
+                append "export JAVA_HOME=$TMP2" .bashrc
+                source .bashrc
+            else
+                echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
+            fi
+        fi
         ;;
 esac
 
+# Creating directories
 for i in bin lib share include tmp
 do
     createDir $i
@@ -150,6 +211,7 @@ case $OSNAME in
     *)
         ;;
 esac
+
 cd $HOME
 
 if  [ ! -x "$(command -v ewe)" ]; then
@@ -164,19 +226,36 @@ if  [ ! -x "$(command -v ewe)" ]; then
     fi
 fi
 
-createDir $SUBLOWER
+appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
+appendFile "# Adding EDT variables" $HOME/.edtrc
+appendFile "export EDT_CURRENT_YEAR=$YEAR" $HOME/.edtrc
+appendFile "export EDT_CURRENT_TERM=$TERM" $HOME/.edtrc
+appendFile "export EDT_COURSES=$COURSE" $HOME/.edtrc
+appendFile "export EDT_CURRENT_COURSE=$COURSE" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_URL_BASE=${URLBASE}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_GROUP=${GROUP}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_URL_VERSION_CONTROL=${URLVERSCTRL}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_USERNAME=${USERNAME}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_REPONAME=${REPONAME}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_PREFIX_REPO=${PREFIX}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}" $HOME/.edtrc
+appendFile ". \$HOME/.edtrc" $HOME/.bashrc
 
-cd $HOME/$SUBLOWER
 
-if [ -z "${REPO}" ]
-then
-    svn co https://svn.riouxsvn.com/$PREFIX$USERNAME --username $USERNAME
+createDir $COURSELOWER
+
+URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
+
+echo "Getting url $URLINITSCRIPT"
+
+wget $URLINITSCRIPT
+
+if [ "$?" -ne 0 ]; then
+    echo "edt_init_script.sh cannot be download"
 else
-    svn co https://svn.riouxsvn.com/$REPO --username $USERNAME
+    bash $HOME/edt_init_script.sh
 fi
 
-if [ "$?" -ne 0 ]
-then
-    echo "You don't have a repository, please add one"
-    exit 1
-fi
+# if [ -f $HOME/edt_init_script.sh ]; then
+#     rm -f $HOME/edt_init_script.sh
+# fi
