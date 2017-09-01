@@ -6,6 +6,17 @@
 # purpose: This program initializes the $HOME/.edtcfg file and the
 #          directory hierarchy.
 #
+# Modifications:
+# (jfcmacro)
+# 01/09/2017 - There are maybe two differents users: USERNAME current user and
+#              SVNUSERNAME user on svn repository.
+#            - Correcting options: -h doesn't work. Now is correctly working
+#            - Updating enviroment variable PATH adding the $HOME/bin path.
+#            - On Cygwin JAVA_HOME is searching with two usual directories:
+#              C:\Program Files and C:\Program Files (x86).
+#            - edt_init_script is correctly downloaded and executed
+#              from EDT_$COURSE_URL_BASE
+#
 
 function getYear {
     local thisYear=$(date +"%Y")
@@ -50,8 +61,9 @@ TERM=$(getTerm)
 YEAR=$(getYear)
 OSNAME=`uname -s`
 USERNAME=`id -un`
+SVNUSERNAME=$USERNAME
 PREFIX="2447"
-# REPOFORMAT="${PREFIX}${USERNAME}"
+# REPOFORMAT="${PREFIX}${SVNUSERNAME}"
 VERSCTRL="svn"
 
 function createDir {
@@ -123,7 +135,7 @@ while getopts "b:c:g:hn:p:r:u:v:" opt; do
 	    usage $progname 0
 	    ;;
         n)
-            USERNAME=$OPTARG
+            SVNUSERNAME=$OPTARG
             ;;
         p)
             PREFIX=$OPTARG
@@ -161,12 +173,12 @@ if [ -z "${URLBASE}" -o -z "${COURSE}" -o -z "${GROUP}" -o -z "${URLVERSCTRL}" ]
 fi
 
 if [ -z "${REPONAME}" ]; then
-    REPONAME=$PREFIX$USERNAME
+    REPONAME=$PREFIX$SVNUSERNAME
 fi
 
 cd $HOME
 
-if [ -f .bash ]; then
+if [ -f .bashrc ]; then
     appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
 fi
 
@@ -247,7 +259,7 @@ appendFile "export EDT_CURRENT_COURSE=$COURSE" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_URL_BASE=${URLBASE}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_GROUP=${GROUP}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_URL_VERSION_CONTROL=${URLVERSCTRL}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_USERNAME=${USERNAME}" $HOME/.edtrc
+appendFile "export EDT_${COURSE}_USERNAME=${SVNUSERNAME}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_REPONAME=${REPONAME}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_PREFIX_REPO=${PREFIX}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}" $HOME/.edtrc

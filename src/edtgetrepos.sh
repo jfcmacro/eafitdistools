@@ -6,7 +6,12 @@
 # purpose: This program create a directory hierarchy
 #
 # Modifications:
-# 30/08/2017 - Updating 
+# (jfcmacro)
+# 01/09/2017 - A command options were added in order to see a resumen.
+#            - The default course directories were added: tmp clases
+# (jfcmacro)
+# 30/08/2017 - Updating
+# (jfcmacro)
 # 26/08/2017 - Generalizing the script in order to manage diferents OS.
 #
 
