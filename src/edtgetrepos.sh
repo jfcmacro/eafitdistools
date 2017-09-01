@@ -15,6 +15,26 @@ function tolower {
     echo "$mytolower"
 }
 
+function createDir {
+    if [ ! -d $1 ]
+    then
+	mkdir $1
+    fi
+}
+
+function createSvnDir {
+    if [ ! -d $1 ]
+    then
+	svn mkdir $1 
+    fi
+}
+
+function usage {
+    echo "       $1 -h" >&2
+    echo "       $1 -r" >&2
+    exit $2
+}
+
 if [ ! -f $HOME/.edtrc ]; then
     echo "$HOME/.edtrc doesn't exists, please execute edtinit" 2>&1
     exit 1
@@ -35,13 +55,25 @@ eval URLBASE='$'$tmp
 tmp="EDT_${COURSE}_URL_VERSION_CONTROL"
 eval URLVERSIONCONTROL='$'$tmp
 
-echo "Printing resume"
-echo "course: $COURSE"
-echo "username: $USERNAME"
-echo "courselower: $COURSELOWER"
-echo "reponame: $REPONAME"
-echo "urlbase: $URLBASE"
-echo "urlversioncontrol: $URLVERSIONCONTROL"
+while getopts "r"; do
+    case $opt in
+        h)
+            usage $progname 0
+            ;;
+        r)
+            echo "Printing resume"
+            echo "course: $COURSE"
+            echo "username: $USERNAME"
+            echo "courselower: $COURSELOWER"
+            echo "reponame: $REPONAME"
+            echo "urlbase: $URLBASE"
+            echo "urlversioncontrol: $URLVERSIONCONTROL"
+            ;;        
+	\?)
+	    usage $progname 1
+	    ;;
+    esac
+done
 
 cd $HOME/$COURSELOWER
 
@@ -55,3 +87,12 @@ then
     echo "You don't have a repository, please add one"
     exit 1
 fi
+
+# Checking directories
+for i in config configuracion proyectos parciales seguimientos clases talleres
+do
+    createSvnDir $i
+done
+
+svn ci -m "Adding created directories to the repositories" --username $USERNAME
+

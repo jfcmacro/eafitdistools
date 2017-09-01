@@ -61,6 +61,14 @@ function createDir {
     fi
 }
 
+function createDirGo {
+    if [ ! -d $1 ]
+    then
+	mkdir $1
+    fi
+    cd $1
+}
+
 function createSvnDirGo {
     if [ ! -d $1 ]
     then
@@ -96,7 +104,11 @@ function appendFile {
     echo $1 >> $2
 }
 
-progname=$0
+function getExecInitScript {
+}
+
+longprogname=$0
+progname=$(basename $longprogname)
 
 while getopts "b:c:g:n:p:r:u:v:" opt; do
     case $opt in
@@ -156,6 +168,10 @@ if [ -z "${REPONAME}" ]; then
 fi
 
 cd $HOME
+
+if [ -f .bash ]; then
+    appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+fi
 
 # Adding JAVA_HOME variables
 case $OSNAME in
@@ -219,7 +235,6 @@ if  [ ! -x "$(command -v ewe)" ]; then
 	echo "Installing ewe last version, it takes few minutes, please wait."
 	cabal update
 	cabal install ewe --prefix $(cygpath -w $HOME)
-	appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
 	source .bashrc
     else
 	echo "Please install Haskell Platform before install ewe" >&2
@@ -241,20 +256,23 @@ appendFile "export EDT_${COURSE}_PREFIX_REPO=${PREFIX}" $HOME/.edtrc
 appendFile "export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}" $HOME/.edtrc
 appendFile ". \$HOME/.edtrc" $HOME/.bashrc
 
-
-createDir $COURSELOWER
-
 URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 
 echo "Getting url $URLINITSCRIPT"
 
-wget $URLINITSCRIPT
+wget $URLINITSCRIPT -O edt_init_script.sh
 
 if [ "$?" -ne 0 ]; then
     echo "edt_init_script.sh cannot be download"
+    if [ -f edt_init_script.sh ]; then
+        rm -f edt_init_script.sh
+    fi
 else
+    echo "Executing edt_init_script.sh"
     bash $HOME/edt_init_script.sh
 fi
+
+createDir $COURSELOWER
 
 # if [ -f $HOME/edt_init_script.sh ]; then
 #     rm -f $HOME/edt_init_script.sh

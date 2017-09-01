@@ -26,7 +26,8 @@ function createSvnDirGo {
 
 function usage {
     echo "       $1 -h" >&2
-    echo "       $1 [{-c|-p|-t}] -n <number>" >&2
+    echo "       $1 [-c|-p|-t] -n <number>" >&2
+    echo "       $1 [-y] -n <proyect-name> [-w]" >&2
     exit $2
 }
 
@@ -35,7 +36,7 @@ EVALNAME="clase"
 
 progname=$0
 
-while getopts "cptn:" opt; do
+while getopts "cptn:w" opt; do
     case $opt in
 	c)
             EVALUNIT="clases"
@@ -44,7 +45,6 @@ while getopts "cptn:" opt; do
         h)
 	    usage $progname 0
 	    ;;
-
 	p)
 	    EVALUNIT="parciales"
             EVALNAME="parcial"
@@ -55,6 +55,13 @@ while getopts "cptn:" opt; do
 	    ;;
         n)
             NUMBER=$OPTARG
+            ;;
+        w)
+            WRITE="true"
+            ;;
+        y)
+            EVALUNIT="proyectos"
+            EVALUNIT=""
             ;;
 	\?)
 	    usage $progname 1
@@ -103,6 +110,29 @@ cd $REPONAME
 svn up --username $USERNAME
 
 createSvnDirGo $EVALUNIT
-createSvnDirGo $EVALNAME$NUMBER
+case $EVALUNIT in
+    clases|parciales|talleres)
+        createSvnDirGo $EVALNAME$NUMBER
+        ;;
+    proyectos)
+        if [ -d $EVALNAME ]; then
+            cd $EVALNAME
+            if [ -z $WRITE ]; then
+                if [ ! -d $NUMBER ]; then
+                    echo "Eval unit $EVALNAME $NUMBER is not created" >&2
+                    exit 1
+                else
+                    cd $NUMBER
+                fi
+            else
+                if [ -d $NUMBER ]; then
+                    echo "Eval unit $EVALNAME $NUMBER is already created" >&2
+                else
+                    svn mkdir $NUMBER --username $USERNAME
+                fi
+            fi
+        fi
+        ;;
+esac
 
 exec bash
