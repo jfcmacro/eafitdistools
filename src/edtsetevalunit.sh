@@ -34,9 +34,10 @@ function usage {
 EVALUNIT="clases"
 EVALNAME="clase"
 
-progname=$0
+longprogname=$0
+progname=$(basename $longprogname)
 
-while getopts "cptn:w" opt; do
+while getopts "chn:ptwy" opt; do
     case $opt in
 	c)
             EVALUNIT="clases"
@@ -51,7 +52,7 @@ while getopts "cptn:w" opt; do
 	    ;;
 	t)
 	    EVALUNIT="talleres"
-            EVALUNIT="taller"
+            EVALNAME="taller"
 	    ;;
         n)
             NUMBER=$OPTARG
@@ -61,7 +62,7 @@ while getopts "cptn:w" opt; do
             ;;
         y)
             EVALUNIT="proyectos"
-            EVALUNIT=""
+            EVALNAME=""
             ;;
 	\?)
 	    usage $progname 1
@@ -110,28 +111,26 @@ cd $REPONAME
 svn up --username $USERNAME
 
 createSvnDirGo $EVALUNIT
+
 case $EVALUNIT in
     clases|parciales|talleres)
         createSvnDirGo $EVALNAME$NUMBER
         ;;
     proyectos)
-        if [ -d $EVALNAME ]; then
-            cd $EVALNAME
-            if [ -z $WRITE ]; then
-                if [ ! -d $NUMBER ]; then
-                    echo "Eval unit $EVALNAME $NUMBER is not created" >&2
-                    exit 1
-                else
-                    cd $NUMBER
-                fi
+        EVALNAME=$NUMBER
+        if [ -z $WRITE ]; then
+            if [ ! -d $EVALNAME ]; then
+                echo "Eval unit $EVALNAME must be write, please use -w option" >&2
+                exit 1
+            fi
+        else
+            if [ -d $EVALNAME ]; then
+                    echo "Eval unit $EVALNAME is already created" >&2
             else
-                if [ -d $NUMBER ]; then
-                    echo "Eval unit $EVALNAME $NUMBER is already created" >&2
-                else
-                    svn mkdir $NUMBER --username $USERNAME
-                fi
+                svn mkdir $EVALNAME 
             fi
         fi
+        cd $EVALNAME
         ;;
 esac
 

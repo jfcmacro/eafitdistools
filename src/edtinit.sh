@@ -104,13 +104,10 @@ function appendFile {
     echo $1 >> $2
 }
 
-function getExecInitScript {
-}
-
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "b:c:g:n:p:r:u:v:" opt; do
+while getopts "b:c:g:hn:p:r:u:v:" opt; do
     case $opt in
 	b)
 	    URLBASE=$OPTARG

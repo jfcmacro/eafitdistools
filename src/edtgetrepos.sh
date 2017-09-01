@@ -55,7 +55,10 @@ eval URLBASE='$'$tmp
 tmp="EDT_${COURSE}_URL_VERSION_CONTROL"
 eval URLVERSIONCONTROL='$'$tmp
 
-while getopts "r"; do
+longprogname=$0
+progname=$(basename $longprogname)
+
+while getopts "hr" opt; do
     case $opt in
         h)
             usage $progname 0
@@ -88,6 +91,8 @@ then
     exit 1
 fi
 
+cd $REPONAME
+
 # Checking directories
 for i in config configuracion proyectos parciales seguimientos clases talleres
 do
@@ -95,4 +100,3 @@ do
 done
 
 svn ci -m "Adding created directories to the repositories" --username $USERNAME
-
