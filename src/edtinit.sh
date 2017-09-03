@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 #
 # created: 28/08/2017
@@ -8,15 +8,17 @@
 #
 # Modifications:
 # (jfcmacro)
+# 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
+# (jfcmacro)
 # 01/09/2017 - There are maybe two differents users: USERNAME current user and
 #              SVNUSERNAME user on svn repository.
 #            - Correcting options: -h doesn't work. Now is correctly working
 #            - Updating enviroment variable PATH adding the $HOME/bin path.
 #            - On Cygwin JAVA_HOME is searching with two usual directories:
 #              C:\Program Files and C:\Program Files (x86).
-#            - edt_init_script is correctly downloaded and executed
-#              from EDT_$COURSE_URL_BASE
-#
+#            - edt_init_script.sh is correctly downloaded and executed
+#              from EDT_$COURSE_URL_BASE.
+#            - edt_init_script.sh is erased after it's been executed.
 
 function getYear {
     local thisYear=$(date +"%Y")
@@ -279,10 +281,7 @@ if [ "$?" -ne 0 ]; then
 else
     echo "Executing edt_init_script.sh"
     bash $HOME/edt_init_script.sh
+    rm -f edt_init_script.sh
 fi
 
 createDir $COURSELOWER
-
-# if [ -f $HOME/edt_init_script.sh ]; then
-#     rm -f $HOME/edt_init_script.sh
-# fi

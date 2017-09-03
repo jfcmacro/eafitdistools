@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 #
 # created: 30/08/2017
@@ -6,7 +6,11 @@
 # purpose: This program set the current eval unit
 #
 # Modifications:
-# 30/08/2017 - Updating 
+# (jfcmacro)
+# 02/09/2017 - Correcting the path of env instead of /usr/ was /usr/bin
+# (jfcmacro)
+# 30/08/2017 - Updating
+# (jfcmacro)
 # 26/08/2017 - Generalizing the script in order to manage diferents OS.
 #
 
@@ -27,7 +31,7 @@ function createSvnDirGo {
 function usage {
     echo "       $1 -h" >&2
     echo "       $1 [-c|-p|-t] -n <number>" >&2
-    echo "       $1 [-y] -n <proyect-name> [-w]" >&2
+    echo "       $1 -y -n <proyect-name> [-w]" >&2
     exit $2
 }
 

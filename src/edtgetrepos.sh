@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 #
 # created: 11/08/2017
@@ -6,6 +6,8 @@
 # purpose: This program create a directory hierarchy
 #
 # Modifications:
+# (jfcmacro)
+# 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
 # (jfcmacro)
 # 01/09/2017 - A command options were added in order to see a resumen.
 #            - The default course directories were added: tmp clases
