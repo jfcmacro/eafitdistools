@@ -59,6 +59,18 @@ function toupper {
     echo "$mytoupper"
 }
 
+function helpInfo {
+    printf "options:\n"
+    printf "\t-b <url-base>: base URL where the course is stored on internet\n"
+    printf "\t-c <course>: course id name\n"
+    printf "\t-g <group>: group id name\n"
+    printf "\t-n <username>: username on the repository\n"
+    printf "\t-p <prefix>: Prefix name to identify the repository. Usually it is used to compose a reponame with prefix and username\n"
+    printf "\t-r <reponame>: A reponame different of that compose with prefix and username\n"
+    printf "\t-u <url-versctrl>: URL where the repository exists on internet\n"
+    printf "\t-v versctrl: Only valid svn\n"
+}
+
 TERM=$(getTerm)
 YEAR=$(getYear)
 OSNAME=`uname -s`
@@ -111,7 +123,10 @@ function linkDir {
 function usage {
     echo "       $1 -h" >&2
     echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
-    exit $2
+    echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
+    if [ -z $3 ]; then
+        exit $2
+    fi
 }
 
 function appendFile {
@@ -121,8 +136,11 @@ function appendFile {
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "b:c:g:hn:p:r:u:v:" opt; do
+while getopts "ab:c:g:hn:p:r:u:v:" opt; do
     case $opt in
+        a)
+            ADDCOURSE="add"
+            ;;
 	b)
 	    URLBASE=$OPTARG
 	    ;;
@@ -134,7 +152,8 @@ while getopts "b:c:g:hn:p:r:u:v:" opt; do
 	    GROUP=$OPTARG
 	    ;;
 	h)
-	    usage $progname 0
+	    usage $progname 0 "help"
+            helpInfo
 	    ;;
         n)
             SVNUSERNAME=$OPTARG
