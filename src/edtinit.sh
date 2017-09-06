@@ -123,10 +123,11 @@ function linkDir {
 function usage {
     echo "       $1 -h" >&2
     echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
-#    echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
-    if [ -z $3 ]; then
-        exit $2
+    echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
+    if [ "$2" -eq 0 ]; then
+        helpInfo
     fi
+    exit $2
 }
 
 function appendFile {
@@ -152,8 +153,7 @@ while getopts "ab:c:g:hn:p:r:u:v:" opt; do
 	    GROUP=$OPTARG
 	    ;;
 	h)
-	    usage $progname 0 "help"
-            helpInfo
+	    usage $progname 0
 	    ;;
         n)
             SVNUSERNAME=$OPTARG
@@ -180,9 +180,19 @@ while getopts "ab:c:g:hn:p:r:u:v:" opt; do
     esac
 done
 
-if [ -f $HOME/.edtrc ]; then
-    echo "$HOME/.edtrc exits" >&2
+if [ -z "${ADDCOURSE}" -a -f $HOME/.edtrc ]; then
+    echo "$HOME/.edtrc exists" >&2
     exit 1
+else
+    if [ -n "${ADDCOURSE}" -a ! -f $HOME/.edtrc ]; then
+        echo "$HOME/.edtrc doesn't exist. To add course first, init the $HOME/.edtrc file" >&2
+        exit 1
+    # else
+    #     if [ - -f $HOME/.edtrc ]; then
+    #         echo "$HOME/.edtrc exists" >&2
+    #         exit 1
+    #     fi
+    fi
 fi
 
 if [ -z "${URLBASE}" -o -z "${COURSE}" -o -z "${GROUP}" -o -z "${URLVERSCTRL}" ]; then
@@ -200,7 +210,10 @@ fi
 cd $HOME
 
 if [ -f .bashrc ]; then
-    appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+    tmp=$(grep -c "\$HOME/bin" $HOME/.bashrc)
+    if [ "${tmp}" -eq 0 ]; then
+        appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+    fi
 fi
 
 # Adding JAVA_HOME variables
@@ -271,20 +284,45 @@ if  [ ! -x "$(command -v ewe)" ]; then
     fi
 fi
 
-appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
-appendFile "# Adding EDT variables" $HOME/.edtrc
-appendFile "export EDT_CURRENT_YEAR=$YEAR" $HOME/.edtrc
-appendFile "export EDT_CURRENT_TERM=$TERM" $HOME/.edtrc
-appendFile "export EDT_COURSES=$COURSE" $HOME/.edtrc
-appendFile "export EDT_CURRENT_COURSE=$COURSE" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_URL_BASE=${URLBASE}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_GROUP=${GROUP}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_URL_VERSION_CONTROL=${URLVERSCTRL}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_USERNAME=${SVNUSERNAME}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_REPONAME=${REPONAME}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_PREFIX_REPO=${PREFIX}" $HOME/.edtrc
-appendFile "export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}" $HOME/.edtrc
-appendFile ". \$HOME/.edtrc" $HOME/.bashrc
+tmp=$(grep -c "\$HOME/share/man" $HOME/.bashrc)
+if [ "${tmp}" -eq 0 ]; then
+    appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
+fi
+
+if [ -z "${ADDCOURSE}" ]; then
+    cat > $HOME/.edtrc <<EOF
+# Adding EDT variables for course: ${COURSE} $(date '+%Y/%m/%d-%H:%M:%S')
+export EDT_CURRENT_YEAR=$YEAR
+export EDT_CURRENT_TERM=$TERM
+export EDT_COURSES=$COURSE
+export EDT_CURRENT_COURSE=$COURSE
+export EDT_${COURSE}_URL_BASE=${URLBASE}
+export EDT_${COURSE}_GROUP=${GROUP}
+export EDT_${COURSE}_URL_VERSION_CONTROL=${URLVERSCTRL}
+export EDT_${COURSE}_USERNAME=${SVNUSERNAME}
+export EDT_${COURSE}_REPONAME=${REPONAME}
+export EDT_${COURSE}_PREFIX_REPO=${PREFIX}
+export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}
+EOF
+    appendFile ". \$HOME/.edtrc" $HOME/.bashrc
+else
+    tmp=$(grep -c "$COURSE" $HOME/.edtrc)
+    if [ "${tmp}" -eq 0 ]; then
+        sed -i "s/\(EDT_COURSES=.*$\)/\1:${COURSE}/g" $HOME/.edtrc  
+        cat >> $HOME/.edtrc <<EOF 
+# Adding EDT variables for course: ${COURSE} $(date '+%Y/%m/%d-%H:%M:%S')
+export EDT_${COURSE}_URL_BASE=${URLBASE}
+export EDT_${COURSE}_GROUP=${GROUP}
+export EDT_${COURSE}_URL_VERSION_CONTROL=${URLVERSCTRL}
+export EDT_${COURSE}_USERNAME=${SVNUSERNAME}
+export EDT_${COURSE}_REPONAME=${REPONAME}
+export EDT_${COURSE}_PREFIX_REPO=${PREFIX}
+export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}
+EOF
+    else
+        echo "Warning: Course ${COURSE} already registed" >&2
+    fi
+fi
 
 URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 

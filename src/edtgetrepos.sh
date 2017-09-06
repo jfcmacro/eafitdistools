@@ -36,9 +36,18 @@ function createSvnDir {
     fi
 }
 
+function helpInfo {   
+    printf "options:\n" >&2
+    printf "\t-h: prints the help\n"
+    printf "\t-r: shows a resumen of variable values\n"
+}
+
 function usage {
-    echo "       $1 -h" >&2
-    echo "       $1 -r" >&2
+    printf "\t$1 -h\n" >&2
+    printf "\t$1 [-r]\n" >&2
+    if [ "$2" -eq 0 ]; then
+        helpInfo
+    fi
     exit $2
 }
 

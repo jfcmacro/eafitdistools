@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([eafitdistools], [0.0.1.15], [jfcmacro@gmail.com])
+AC_INIT([eafitdistools], [0.0.1.17], [jfcmacro@gmail.com])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
