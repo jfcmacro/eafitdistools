@@ -4,13 +4,26 @@ etgetrepos \- gets a student repository
 .SH SYNOPSIS
 .B etgetrepos
 [\fB\-h]
+[\fB\-l|\fB\-w|\fB\-t|\fB\-p] \fIn
 .SH DESCRIPTION
 .B etgetrepos
-gets a student repository from different sources, it depends on 
+gets a student repository from different sources
 .SH OPTIONS
 .TP
-.BR \-h
+\fB\-h
 Display the help option.
+.TP
+\fB\-l=\fIn
+Creates the directory needed for a new lecture \fIn
+.TP
+\fB\-w=\fIn
+Creates the directory needed for a new workshop \fIn
+.TP
+\fB\-t=\fIn
+Creates the directory needed for a new test \fIn
+.TP
+\fB\-p=\fIn
+Creates the directory needed for a new project \fIn
 .SH Files
 .I ~/.edtrc
 .RS
@@ -19,4 +32,4 @@ Student configuration. See
 for futher details.
 .SH Author
 Juan Francisco Cardona McCormick < fcardona at eafit dot edu dot co >
-
+Andres Felipe Ortega Montoya < aortega7 at eafit dot edu dot co >
