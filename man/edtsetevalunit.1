@@ -1,0 +1,44 @@
+.TH EDTSETEVALUNIT 1
+.SH NAME
+edtsetevalunit \- sets the current eval unit
+.SH SYNOPSIS
+.B edtgetrepos [-l|-t|-w] -n <number>
+.PP
+.B edtgetrepos -p -n <project-name> [-w]
+.SH DESCRIPTION
+.B edtsetevalunit
+creates and sets the current eval unit in the user repository
+.SH OPTIONS
+.TP
+.BR \-h
+prints the help
+.TP
+.BR \-l
+Select Lecture eval unit
+.TP
+.BR \-t
+Select Test eval unit
+.TP
+.BR \-w
+Select Workshop eval unit
+.TP
+.BR \-p
+Select Project eval unit
+.TP
+.BR -n
+<number> of eval unit
+.TP
+.BR -n
+<proyect-name>
+.TP
+.BR -d
+Write proyect unit into Disk
+.SH Files
+.I ~/.edtrc
+.RS
+Student configuration. See
+.BR edtrc(5)
+for futher details.
+.SH Author
+Juan Francisco Cardona McCormick < fcardona at eafit dot edu dot co >
+Sebastian Patiño Barrientos < spatino6 at eafit dot edu dot co>

@@ -31,13 +31,13 @@ function createSvnDirGo {
 function helpInfo {
     printf "options:\n" >&2
     printf "\t-h: prints the help\n" >&2
-    printf "\t-c: select 'Clases' eval unit\n" >&2
-    printf "\t-p: select 'Parciales' eval unit\n" >&2
-    printf "\t-t: select 'Talleres' eval unit\n" >&2
-    printf "\t-y: select 'proYectos' eval unit\n" >&2
+    printf "\t-l: select Lecture  eval unit\n" >&2
+    printf "\t-t: select Test eval unit\n" >&2
+    printf "\t-w: select Workshop eval unit\n" >&2
+    printf "\t-p: select Project eval unit\n" >&2
     printf "\t-n: <number> of eval unit\n" >&2
     printf "\t-n: <proyect-name>\n" >&2
-    printf "\t-w: write 'proYectos' unit into disk\n" >&2
+    printf "\t-d: write Project unit into disk\n" >&2
 }
 
 function usage {
@@ -56,30 +56,30 @@ EVALNAME="clase"
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "chn:ptwy" opt; do
+while getopts "lhn:twdp" opt; do
     case $opt in
-	c)
+	l)
             EVALUNIT="clases"
             EVALNAME="clase"
 	    ;;
         h)
 	    usage $progname 0
 	    ;;
-	p)
+	t)
 	    EVALUNIT="parciales"
             EVALNAME="parcial"
 	    ;;
-	t)
+	w)
 	    EVALUNIT="talleres"
             EVALNAME="taller"
 	    ;;
         n)
             NUMBER=$OPTARG
             ;;
-        w)
+        d)
             WRITE="true"
             ;;
-        y)
+        p)
             EVALUNIT="proyectos"
             EVALNAME=""
             ;;
