@@ -74,12 +74,16 @@ eval URLVERSIONCONTROL='$'$tmp
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "hr" opt; do
+while getopts "hr:u:n:" opt; do
     case $opt in
         h)
             usage $progname 0
             ;;
+        n)
+            USERNAME=$OPTARG
+            ;;
         r)
+            REPONAME=$OPTARG
             echo "Printing resume"
             echo "course: $COURSE"
             echo "username: $USERNAME"
@@ -87,12 +91,17 @@ while getopts "hr" opt; do
             echo "reponame: $REPONAME"
             echo "urlbase: $URLBASE"
             echo "urlversioncontrol: $URLVERSIONCONTROL"
-            ;;        
-	\?)
-	    usage $progname 1
-	    ;;
+            ;;
+
+        u)
+            URLVERSIONCONTROL=$OPTARG
+            ;;
+        \?)
+            usage $progname 1
+            ;;
     esac
 done
+
 
 cd $HOME/$COURSELOWER
 
