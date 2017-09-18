@@ -1,0 +1,52 @@
+.TH EDTINIT 1
+.SH NAME
+edtinit \- creates and initializes the .edtrc file
+.SH SYNOPSIS
+\fBedtinit \-h
+.br
+\fBedtinit \fR[\fB\-a\fR] \fB\-b \fIurl-base \fB\-c \fIcourse \fB\-g \fIgroup \fR[\fB\-n \fIusername\fR] \fR[\fB\-p \fIprefix\fR] \fR[\fB\-r \fIreponame\fR] \fB\-u \fIurl-versctrl \fR[\fB\-v \fIversctrl\fR]
+.SH DESCRIPTION
+.B edtinit
+creates and initializes the .edtrc file in which the rest of the eafitdistools programs will find the information needed for their execution.
+.SH OPTIONS
+.TP
+\fB\-a
+Adds new course with the given parameters to the .edtrc file.xs
+.TP
+\fB\-b \fIurl-base
+Sets the given URL as the base URL where the course is stored on internet. For example for the programming language course thaught by Juan Francisco Cardona McCormick the base URL should be http://www1.eafit.edu.co/fcardona 
+.TP
+\fB\-c \fIcourse
+Sets the corresponding course ID as the current one. The current course is the one for which you are currently using the application and can be change using edtctrl.sh.
+.TP
+\fB\-g \fIgroup
+Sets the given group ID.  
+.TP
+\fB\-h
+Help option which displays information of how to correctly use the edtinit program.
+.TP
+\fB\-n \fIusername
+Sets the username of your repository.
+.TP
+\fB\-p \fIprefix
+Sets the prefix name to identify the repository. It is usual that repository's name comes from the combination of the prefix and the username.
+.TP
+\fB\-r \fIreponame
+Sets the given repository name as the one to be used. This is given in case that the name is not a composition of the prefix and the username, in that order.
+.TP
+\fB\-u \fIurl-versctrl
+Sets the URL corresponding to the one where your repository exists on internet.
+.TP
+\fB\-v \fIversctrl\
+Only valid svn.
+.LP
+.SH Files
+.I ~/.edtrc
+.RS
+Student configuration. See
+.BR edtrc(5)
+for futher details.
+.SH Authors
+Juan Francisco Cardona McCormick < fcardona at eafit dot edu dot co >
+Catalina Patiño Forero
+
