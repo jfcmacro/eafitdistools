@@ -1,4 +1,2 @@
-#
-man1_MANS = edtgetrepos.1
-
+man_MANS = edtgetrepos.1
 dist_man_MANS = edtgetrepos.1
