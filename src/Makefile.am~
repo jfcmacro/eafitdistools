@@ -1,5 +1,0 @@
-#
-bin_PROGRAMS = etgetrepos
-etgetrepos_SOURCES = etgetrepos.sh
-
-etgetrepos$(EXEXT): etgetrepos.sh
