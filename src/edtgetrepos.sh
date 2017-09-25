@@ -39,12 +39,16 @@ function createSvnDir {
 function helpInfo {   
     printf "options:\n" >&2
     printf "\t-h: prints the help\n"
-    printf "\t-r: shows a resumen of variable values\n"
+    printf "\t-r: set the repository name and shows a summary of variable values\n"
+    printf "\t-n: set the username\n"
+    printf "\t-u: set the version control\n"
 }
 
 function usage {
     printf "\t$1 -h\n" >&2
     printf "\t$1 [-r]\n" >&2
+    printf "\t$1 [-n]\n" >&2
+    printf "\t$1 [-u]\n" >&2
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
@@ -79,11 +83,11 @@ while getopts "hr:u:n:" opt; do
         h)
             usage $progname 0
             ;;
-        n)
-            USERNAME=$OPTARG
-            ;;
+	n)
+	    USERNAME=$OPTARG
+	    ;;
         r)
-            REPONAME=$OPTARG
+	    REPONAME=$OPTARG
             echo "Printing resume"
             echo "course: $COURSE"
             echo "username: $USERNAME"
@@ -92,16 +96,15 @@ while getopts "hr:u:n:" opt; do
             echo "urlbase: $URLBASE"
             echo "urlversioncontrol: $URLVERSIONCONTROL"
             ;;
-
-        u)
-            URLVERSIONCONTROL=$OPTARG
-            ;;
-        \?)
-            usage $progname 1
-            ;;
+	
+	u)
+	    URLVERSIONCONTROL=$OPTARG
+	    ;;
+	\?)
+	    usage $progname 1
+	    ;;
     esac
 done
-
 
 cd $HOME/$COURSELOWER
 
