@@ -143,7 +143,7 @@ am__uninstall_files_from_dir = { \
 man1dir = $(mandir)/man1
 am__installdirs = "$(DESTDIR)$(man1dir)"
 NROFF = nroff
-MANS = $(dist_man_MANS) $(man1_MANS)
+MANS = $(dist_man_MANS) $(man_MANS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(dist_man_MANS) $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -155,7 +155,7 @@ AUTOHEADER = ${SHELL} /home/jfcmacro/Workbench/eafitdistools/missing autoheader
 AUTOMAKE = ${SHELL} /home/jfcmacro/Workbench/eafitdistools/missing automake-1.15
 AWK = gawk
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"eafitdistools\" -DPACKAGE_TARNAME=\"eafitdistools\" -DPACKAGE_VERSION=\"0.0.1.13\" -DPACKAGE_STRING=\"eafitdistools\ 0.0.1.13\" -DPACKAGE_BUGREPORT=\"jfcmacro@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"eafitdistools\" -DVERSION=\"0.0.1.13\"
+DEFS = -DPACKAGE_NAME=\"eafitdistools\" -DPACKAGE_TARNAME=\"eafitdistools\" -DPACKAGE_VERSION=\"0.0.1.17\" -DPACKAGE_STRING=\"eafitdistools\ 0.0.1.17\" -DPACKAGE_BUGREPORT=\"jfcmacro@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"eafitdistools\" -DVERSION=\"0.0.1.17\"
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
@@ -172,15 +172,15 @@ MKDIR_P = /usr/bin/mkdir -p
 PACKAGE = eafitdistools
 PACKAGE_BUGREPORT = jfcmacro@gmail.com
 PACKAGE_NAME = eafitdistools
-PACKAGE_STRING = eafitdistools 0.0.1.13
+PACKAGE_STRING = eafitdistools 0.0.1.17
 PACKAGE_TARNAME = eafitdistools
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.0.1.13
+PACKAGE_VERSION = 0.0.1.17
 PATH_SEPARATOR = :
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = 
-VERSION = 0.0.1.13
+VERSION = 0.0.1.17
 abs_builddir = /home/jfcmacro/Workbench/eafitdistools/man
 abs_srcdir = /home/jfcmacro/Workbench/eafitdistools/man
 abs_top_builddir = /home/jfcmacro/Workbench/eafitdistools
@@ -220,9 +220,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-
-#
-man1_MANS = edtgetrepos.1
+man_MANS = edtgetrepos.1
 dist_man_MANS = edtgetrepos.1
 all: all-am
 
@@ -236,9 +234,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu man/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign man/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu man/Makefile
+	  $(AUTOMAKE) --foreign man/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -256,10 +254,10 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-man1: $(dist_man_MANS) $(man1_MANS)
+install-man1: $(dist_man_MANS) $(man_MANS)
 	@$(NORMAL_INSTALL)
-	@list1='$(man1_MANS)'; \
-	list2='$(dist_man_MANS)'; \
+	@list1=''; \
+	list2='$(dist_man_MANS) $(man_MANS)'; \
 	test -n "$(man1dir)" \
 	  && test -n "`echo $$list1$$list2`" \
 	  || exit 0; \
@@ -292,9 +290,9 @@ install-man1: $(dist_man_MANS) $(man1_MANS)
 
 uninstall-man1:
 	@$(NORMAL_UNINSTALL)
-	@list='$(man1_MANS)'; test -n "$(man1dir)" || exit 0; \
+	@list=''; test -n "$(man1dir)" || exit 0; \
 	files=`{ for i in $$list; do echo "$$i"; done; \
-	l2='$(dist_man_MANS)'; for i in $$l2; do echo "$$i"; done | \
+	l2='$(dist_man_MANS) $(man_MANS)'; for i in $$l2; do echo "$$i"; done | \
 	  sed -n '/\.1[a-z]*$$/p'; \
 	} | sed -e 's,.*/,,;h;s,.*\.,,;s,^[^1][0-9a-z]*$$,1,;x' \
 	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,'`; \
