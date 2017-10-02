@@ -34,16 +34,16 @@ function helpInfo {
     printf "\t-l: select Lecture  eval unit\n" >&2
     printf "\t-t: select Test eval unit\n" >&2
     printf "\t-w: select Workshop eval unit\n" >&2
-    printf "\t-p: select Project eval unit\n" >&2
     printf "\t-n: <number> of eval unit\n" >&2
-    printf "\t-n: <proyect-name>\n" >&2
+    printf "\t-p: select Project eval unit\n" >&2
     printf "\t-d: write Project unit into disk\n" >&2
+    printf "\t-n: <proyect-name>\n" >&2
 }
 
 function usage {
     printf "\t$1 -h\n" >&2
-    printf "\t$1 [-c|-p|-t] -n <number>\n" >&2
-    printf "\t$1 -y -n <project-name> [-w]\n" >&2
+    printf "\t$1 [-l|-t|-w] -n <number>\n" >&2
+    printf "\t$1 -p [-w] -n <project-name>\n" >&2
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
