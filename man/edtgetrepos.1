@@ -1,35 +1,28 @@
 .TH ETGETREPOS 1
 .SH NAME
-etgetrepos \- gets a student repository
+etgetrepos \- gets a sudent repository from internet
 .SH SYNOPSIS
-.B etgetrepos
-[\fB\-h]
-[\fB\-l|\fB\-w|\fB\-t|\fB\-p] \fIn
+\fBedtgetrepos \-h
+.br
+\fBedtgetrepos \fR[\fB\-u\fR|\fB\-n\fR|\fB\-r\fR]
 .SH DESCRIPTION
-.B etgetrepos
-gets a student repository from different sources
+.B edtgetrepos
+Downloads a repository from a version control over internet
+and creates needed directories for the course
 .SH OPTIONS
 .TP
 \fB\-h
-Display the help option.
+Display usage of edtgetrepos.
 .TP
-\fB\-l=\fIn
-Creates the directory needed for a new lecture \fIn
+\fB\-u
+Version control to use
 .TP
-\fB\-w=\fIn
-Creates the directory needed for a new workshop \fIn
+\fB\-n
+Username to use in the version control
 .TP
-\fB\-t=\fIn
-Creates the directory needed for a new test \fIn
-.TP
-\fB\-p=\fIn
-Creates the directory needed for a new project \fIn
-.SH Files
-.I ~/.edtrc
-.RS
-Student configuration. See
-.BR edtrc(5)
-for futher details.
+\fB\-r
+Repository name in the version control
 .SH Author
 Juan Francisco Cardona McCormick < fcardona at eafit dot edu dot co >
+.br
 Andres Felipe Ortega Montoya < aortega7 at eafit dot edu dot co >
