@@ -154,7 +154,7 @@ AUTOHEADER = ${SHELL} /home/jfcmacro/Workbench/eafitdistools/missing autoheader
 AUTOMAKE = ${SHELL} /home/jfcmacro/Workbench/eafitdistools/missing automake-1.15
 AWK = gawk
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"eafitdistools\" -DPACKAGE_TARNAME=\"eafitdistools\" -DPACKAGE_VERSION=\"0.0.1.13\" -DPACKAGE_STRING=\"eafitdistools\ 0.0.1.13\" -DPACKAGE_BUGREPORT=\"jfcmacro@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"eafitdistools\" -DVERSION=\"0.0.1.13\"
+DEFS = -DPACKAGE_NAME=\"eafitdistools\" -DPACKAGE_TARNAME=\"eafitdistools\" -DPACKAGE_VERSION=\"0.0.1.17\" -DPACKAGE_STRING=\"eafitdistools\ 0.0.1.17\" -DPACKAGE_BUGREPORT=\"jfcmacro@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"eafitdistools\" -DVERSION=\"0.0.1.17\"
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
@@ -171,15 +171,15 @@ MKDIR_P = /usr/bin/mkdir -p
 PACKAGE = eafitdistools
 PACKAGE_BUGREPORT = jfcmacro@gmail.com
 PACKAGE_NAME = eafitdistools
-PACKAGE_STRING = eafitdistools 0.0.1.13
+PACKAGE_STRING = eafitdistools 0.0.1.17
 PACKAGE_TARNAME = eafitdistools
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.0.1.13
+PACKAGE_VERSION = 0.0.1.17
 PATH_SEPARATOR = :
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = 
-VERSION = 0.0.1.13
+VERSION = 0.0.1.17
 abs_builddir = /home/jfcmacro/Workbench/eafitdistools/src
 abs_srcdir = /home/jfcmacro/Workbench/eafitdistools/src
 abs_top_builddir = /home/jfcmacro/Workbench/eafitdistools
@@ -221,9 +221,9 @@ top_builddir = ..
 top_srcdir = ..
 
 #
-bin_SCRIPTS = edtgetrepos
+bin_SCRIPTS = edtinit edtgetrepos edtsetevalunit
 CLEANFILES = $(bin_SCRIPTS)
-EXTRA_DIST = edtgetrepos.sh
+EXTRA_DIST = edtinit.sh edtgetrepos.sh edtsetevalunit.sh
 all: all-am
 
 .SUFFIXES:
@@ -449,9 +449,17 @@ uninstall-am: uninstall-binSCRIPTS
 .PRECIOUS: Makefile
 
 
+edtinit: $(srcdir)/edtinit.sh
+	cp $(srcdir)/edtinit.sh edtinit
+	chmod +x edtinit
+
 edtgetrepos: $(srcdir)/edtgetrepos.sh
 	cp $(srcdir)/edtgetrepos.sh edtgetrepos
 	chmod +x edtgetrepos
+
+edtsetevalunit: $(srcdir)/edtsetevalunit.sh
+	cp $(srcdir)/edtsetevalunit.sh edtsetevalunit
+	chmod +x edtsetevalunit
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
