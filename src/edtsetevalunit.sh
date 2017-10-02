@@ -31,19 +31,19 @@ function createSvnDirGo {
 function helpInfo {
     printf "options:\n" >&2
     printf "\t-h: prints the help\n" >&2
-    printf "\t-c: select 'Clases' eval unit\n" >&2
-    printf "\t-p: select 'Parciales' eval unit\n" >&2
-    printf "\t-t: select 'Talleres' eval unit\n" >&2
-    printf "\t-y: select 'proYectos' eval unit\n" >&2
+    printf "\t-l: select Lecture  eval unit\n" >&2
+    printf "\t-t: select Test eval unit\n" >&2
+    printf "\t-w: select Workshop eval unit\n" >&2
     printf "\t-n: <number> of eval unit\n" >&2
+    printf "\t-p: select Project eval unit\n" >&2
+    printf "\t-d: write Project unit into disk\n" >&2
     printf "\t-n: <proyect-name>\n" >&2
-    printf "\t-w: write 'proYectos' unit into disk\n" >&2
 }
 
 function usage {
     printf "\t$1 -h\n" >&2
-    printf "\t$1 [-c|-p|-t] -n <number>\n" >&2
-    printf "\t$1 -y -n <project-name> [-w]\n" >&2
+    printf "\t$1 [-l|-t|-w] -n <number>\n" >&2
+    printf "\t$1 -p [-w] -n <project-name>\n" >&2
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
