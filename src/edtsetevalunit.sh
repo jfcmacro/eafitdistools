@@ -56,30 +56,30 @@ EVALNAME="clase"
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "lhn:twdp" opt; do
+while getopts "chn:ptwy" opt; do
     case $opt in
-	l)
+	c)
             EVALUNIT="clases"
             EVALNAME="clase"
 	    ;;
         h)
 	    usage $progname 0
 	    ;;
-	t)
+	p)
 	    EVALUNIT="parciales"
             EVALNAME="parcial"
 	    ;;
-	w)
+	t)
 	    EVALUNIT="talleres"
             EVALNAME="taller"
 	    ;;
         n)
             NUMBER=$OPTARG
             ;;
-        d)
+        w)
             WRITE="true"
             ;;
-        p)
+        y)
             EVALUNIT="proyectos"
             EVALNAME=""
             ;;
