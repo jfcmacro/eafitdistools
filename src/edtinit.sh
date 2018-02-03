@@ -8,6 +8,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 24/01/2018 - Adding PATH $HOME/.local/bin
+# (jfcmacro)
 # 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
 # (jfcmacro)
 # 01/09/2017 - There are maybe two differents users: USERNAME current user and
@@ -212,7 +214,7 @@ cd $HOME
 if [ -f .bashrc ]; then
     tmp=$(grep -c "\$HOME/bin" $HOME/.bashrc)
     if [ "${tmp}" -eq 0 ]; then
-        appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+        appendFile "export PATH=\$HOME/bin:\$PATH:\$HOME/.local/bin" .bashrc
     fi
 fi
 

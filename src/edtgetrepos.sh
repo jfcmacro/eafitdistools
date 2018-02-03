@@ -7,6 +7,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 24/01/2018 - 
+# (jfcmacro)
 # 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
 # (jfcmacro)
 # 01/09/2017 - A command options were added in order to see a resumen.
@@ -122,7 +124,7 @@ fi
 cd $REPONAME
 
 # Checking directories
-for i in config configuracion proyectos parciales seguimientos clases talleres
+for i in configuracion proyectos parciales seguimientos clases talleres
 do
     createSvnDir $i
 done
