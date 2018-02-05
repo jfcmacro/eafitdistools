@@ -63,9 +63,11 @@ function toupper {
 
 function helpInfo {
     printf "options:\n"
+    printf "\t-a: enable to add a new course to $HOME/.edtrc file\n"
     printf "\t-b <url-base>: base URL where the course is stored on internet\n"
     printf "\t-c <course>: course id name\n"
     printf "\t-g <group>: group id name\n"
+    printf "\t-h: print this menu\n" 
     printf "\t-n <username>: username on the repository\n"
     printf "\t-p <prefix>: Prefix name to identify the repository. Usually it is used to compose a reponame with prefix and username\n"
     printf "\t-r <reponame>: A reponame different of that compose with prefix and username\n"
@@ -275,16 +277,17 @@ esac
 
 cd $HOME
 
-if  [ ! -x "$(command -v ewe)" ]; then
-    if [ -x "$(command -v cabal)" ]; then
-	echo "Installing ewe last version, it takes few minutes, please wait."
-	cabal update
-	cabal install ewe --prefix $(cygpath -w $HOME)
-	source .bashrc
-    else
-	echo "Please install Haskell Platform before install ewe" >&2
-    fi
-fi
+# This was move to another script
+# if  [ ! -x "$(command -v ewe)" ]; then
+#     if [ -x "$(command -v cabal)" ]; then
+# 	echo "Installing ewe last version, it takes few minutes, please wait."
+# 	cabal update
+# 	cabal install ewe --prefix $(cygpath -w $HOME)
+# 	source .bashrc
+#     else
+# 	echo "Please install Haskell Platform before install ewe" >&2
+#     fi
+# fi
 
 tmp=$(grep -c "\$HOME/share/man" $HOME/.bashrc)
 if [ "${tmp}" -eq 0 ]; then
