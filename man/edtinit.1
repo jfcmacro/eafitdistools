@@ -4,7 +4,7 @@ edtinit \- creates and initializes the .edtrc file
 .SH SYNOPSIS
 \fBedtinit \-h
 .br
-\fBedtinit \fR[\fB\-a\fR] \fB\-b \fIurl-base \fB\-c \fIcourse \fB\-g \fIgroup \fR[\fB\-n \fIusername\fR] \fR[\fB\-p \fIprefix\fR] \fR[\fB\-r \fIreponame\fR] \fB\-u \fIurl-versctrl \fR[\fB\-v \fIversctrl\fR]
+\fBedtinit \fR[\fB\-a\fR] \fB\-b \fIurl-base \fB\-c \fIcourse \fB\-g \fIgroup \fR[\fB\-n \fIusername\fR] \fR[\fB\-p \fIprefix\fR] \fR[\fB\-r \fIreponame\fR] \fB\-u \fIurl-versctrl \fR[\fB\-w \fIversctrl\fR] \fB\-v
 .SH DESCRIPTION
 .B edtinit
 creates and initializes the .edtrc file in which the rest of the eafitdistools programs will find the information needed for their execution.
@@ -37,8 +37,11 @@ Sets the given repository name as the one to be used.
 \fB\-u \fIurl-versctrl
 Sets the URL corresponding to the one where your repository exists on internet.
 .TP
-\fB\-v \fIversctrl\
+\fB\-w \fIversctrl\
 Only valid svn.
+.TP
+\fB\-v
+Shows the current version.
 .LP
 .SH Files
 .I ~/.edtrc
