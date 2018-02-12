@@ -7,6 +7,10 @@
 #
 # Modifications:
 # (jfcmacro)
+# 08/02/2018 - Adding version
+# (jfcmacro)
+# 24/01/2018 - Adding PATH $HOME/.local/bin
+# (jfcmacro)
 # 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
 # (jfcmacro)
 # 01/09/2017 - A command options were added in order to see a resumen.
@@ -55,6 +59,13 @@ function usage {
     exit $2
 }
 
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
+}
+
+version=EDTPACKAGE
+
 if [ ! -f $HOME/.edtrc ]; then
     echo "$HOME/.edtrc doesn't exists, please execute edtinit" 2>&1
     exit 1
@@ -78,7 +89,7 @@ eval URLVERSIONCONTROL='$'$tmp
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "hr:u:n:" opt; do
+while getopts "hr:u:n:v" opt; do
     case $opt in
         h)
             usage $progname 0
@@ -100,6 +111,9 @@ while getopts "hr:u:n:" opt; do
 	u)
 	    URLVERSIONCONTROL=$OPTARG
 	    ;;
+        v)
+            printVersion $progname $version
+            ;;
 	\?)
 	    usage $progname 1
 	    ;;
@@ -122,7 +136,7 @@ fi
 cd $REPONAME
 
 # Checking directories
-for i in config configuracion proyectos parciales seguimientos clases talleres
+for i in configuracion proyectos parciales seguimientos clases talleres
 do
     createSvnDir $i
 done

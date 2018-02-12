@@ -8,6 +8,10 @@
 #
 # Modifications:
 # (jfcmacro)
+# 08/02/2018 - Adding version
+# (jfcmacro)
+# 24/01/2018 - Adding PATH $HOME/.local/bin
+# (jfcmacro)
 # 02/09/2017 - Correcting the path of env instead of /usr/ it is /usr/bin
 # (jfcmacro)
 # 01/09/2017 - There are maybe two differents users: USERNAME current user and
@@ -61,14 +65,17 @@ function toupper {
 
 function helpInfo {
     printf "options:\n"
+    printf "\t-a: enable to add a new course to $HOME/.edtrc file\n"
     printf "\t-b <url-base>: base URL where the course is stored on internet\n"
     printf "\t-c <course>: course id name\n"
     printf "\t-g <group>: group id name\n"
+    printf "\t-h: print this menu\n" 
     printf "\t-n <username>: username on the repository\n"
     printf "\t-p <prefix>: Prefix name to identify the repository. Usually it is used to compose a reponame with prefix and username\n"
     printf "\t-r <reponame>: A reponame different of that compose with prefix and username\n"
     printf "\t-u <url-versctrl>: URL where the repository exists on internet\n"
-    printf "\t-v versctrl: Only valid svn\n"
+    printf "\t-v: show version\n"
+    printf "\t-w versctrl: Only valid svn\n"
 }
 
 TERM=$(getTerm)
@@ -122,8 +129,9 @@ function linkDir {
 
 function usage {
     echo "       $1 -h" >&2
-    echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
-    echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-v <versctrl> ]" >&2
+    echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-w <versctrl> ]" >&2
+    echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-w <versctrl> ]" >&2
+    echo "       $1 -v" >&2
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
@@ -134,10 +142,17 @@ function appendFile {
     echo $1 >> $2
 }
 
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
+}
+
+version=EDTPACKAGE
+
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "ab:c:g:hn:p:r:u:v:" opt; do
+while getopts "ab:c:g:hn:p:r:u:vw:" opt; do
     case $opt in
         a)
             ADDCOURSE="add"
@@ -167,7 +182,10 @@ while getopts "ab:c:g:hn:p:r:u:v:" opt; do
         u)
             URLVERSCTRL=$OPTARG
             ;;
-	v)
+        v)
+            printVersion $progname $version
+            ;;
+	w)
 	    VERSCTRL=$OPTARG
 	    ;;
 	\?)
@@ -212,7 +230,7 @@ cd $HOME
 if [ -f .bashrc ]; then
     tmp=$(grep -c "\$HOME/bin" $HOME/.bashrc)
     if [ "${tmp}" -eq 0 ]; then
-        appendFile "export PATH=\$HOME/bin:\$PATH" .bashrc
+        appendFile "export PATH=\$HOME/bin:\$PATH:\$HOME/.local/bin" .bashrc
     fi
 fi
 
@@ -273,16 +291,17 @@ esac
 
 cd $HOME
 
-if  [ ! -x "$(command -v ewe)" ]; then
-    if [ -x "$(command -v cabal)" ]; then
-	echo "Installing ewe last version, it takes few minutes, please wait."
-	cabal update
-	cabal install ewe --prefix $(cygpath -w $HOME)
-	source .bashrc
-    else
-	echo "Please install Haskell Platform before install ewe" >&2
-    fi
-fi
+# This was move to another script
+# if  [ ! -x "$(command -v ewe)" ]; then
+#     if [ -x "$(command -v cabal)" ]; then
+# 	echo "Installing ewe last version, it takes few minutes, please wait."
+# 	cabal update
+# 	cabal install ewe --prefix $(cygpath -w $HOME)
+# 	source .bashrc
+#     else
+# 	echo "Please install Haskell Platform before install ewe" >&2
+#     fi
+# fi
 
 tmp=$(grep -c "\$HOME/share/man" $HOME/.bashrc)
 if [ "${tmp}" -eq 0 ]; then
