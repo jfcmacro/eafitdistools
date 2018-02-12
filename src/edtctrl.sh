@@ -1,4 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+#
+# created: 02/10/2017
+# user: Natalias Arias (narias16)
+# purpose: Show the current configuration file (.edtrc) and change it
+#          with the new user information
+#
+# Modifications:
+# (jfcmacro)
+# 12/02/2018 - Adding version, change #! in order to be more generic
 
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
@@ -11,6 +21,7 @@ function helpInfo {
     printf "\t-r: shows a summary of variable values\n"
     printf "\t-c: changes the current course to the value given\n"
     printf "\t-i: shows all the courses available\n"
+    printf "\t-v: shows current version\n"
 }
 
 function usage {
@@ -28,10 +39,15 @@ changeVar() {
 
     if [ "${tmp}" > 0 ]; then
 	aux='EDT_CURRENT_COURSE='
-	sed -i '' "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc
+	sed -i "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc
 	        
     fi
     source $HOME/.edtrc
+}
+
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
 }
 
 if [ ! -f $HOME/.edtrc ]; then
@@ -51,7 +67,10 @@ eval USERNAME='$'$tmp
 
 longprogname=$0
 progname=$(basename $longprogname)
-while getopts "hrc:i" opt; do
+
+version=EDTPACKAGE
+
+while getopts "hrc:iv" opt; do
     case $opt in
 
 	h)
@@ -81,7 +100,9 @@ while getopts "hrc:i" opt; do
 	    done
 	    changeVar
 	    ;;
-	
+        v)
+	    printVersion $progname $version
+            ;;
 	\?)
 	    usage $progname 0
 	    ;;

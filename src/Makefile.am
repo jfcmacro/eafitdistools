@@ -17,11 +17,11 @@ edtsetevalunit: $(srcdir)/edtsetevalunit.sh
 	cp $(srcdir)/edtsetevalunit.sh $@
 	sed -i 's/EDTPACKAGE/$(PACKAGE_VERSION)/' $@
 	chmod +x $@
-  
+
 edtctrl: $(srcdir)/edtctrl.sh
-  cp $(srcdir)/edtctrl.sh $@
-  sed -i 's/EDTPACKAGE/$(PACKAGE_VERSION)/' $@
-  chmod +x edtctrl
+	cp $(srcdir)/edtctrl.sh $@
+	sed -i 's/EDTPACKAGE/$(PACKAGE_VERSION)/' $@
+	chmod +x edtctrl
 
 edtcabinst: $(srcdir)/edtcabinst.sh
 	cp $(srcdir)/edtcabinst.sh $@
