@@ -1,0 +1,33 @@
+.TH EDTCTRL 1
+.SH NAME
+edtctrl \- changes a students current course
+.SH SYNOPSIS
+.B edtctrl
+[\fB\-h]
+[\fB\-r|\fB\-c \fIcourse|\fB\-i]
+.SH DESCRIPTION
+.B edtctrl
+changes the students current course
+.SH OPTIONS
+.TP
+\fB\-h
+Shows the help option
+.TP
+\fB\-r
+Shows a summary of the student course, username and repository
+.TP
+\fB\-c \fIcourse
+Changes the value of current course to the given one in the parameter
+.TP
+\fB\-i
+Shows a list of the available courses and changes the current course to the chosen one
+.SH Files
+.I ~/.edtrc
+.RS
+Student configuration. See
+.BR edtrc(5)
+for further details.
+.Sh Author
+Juan Francisco Cardona McCormick <fcardona@eafit.edu.co>
+.br
+Natalia Arias Lozano <nariasl@eafit.edu.co>
