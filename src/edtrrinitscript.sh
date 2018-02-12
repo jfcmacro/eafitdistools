@@ -4,6 +4,10 @@
 # Created: 05/02/2018
 # Programmer: Juan Francisco Cardona Mc'Cormick (jfcmacro)
 # purpose: Re-run edt_init_script.sh
+#
+# Modifications:
+# (jfcmacro)
+# 08/02/2018 - Adding version
 
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
@@ -16,6 +20,13 @@ function createDir {
 	mkdir $1
     fi
 }
+
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
+}
+
+version=EDTPACKAGE
 
 OSNAME=`uname -s`
 USERNAME=`id -un`
@@ -33,6 +44,14 @@ eval URLVERSIONCONTROL='$'$tmp
 
 longprogname=$0
 progname=$(basename $longprogname)
+
+while getopts "v" opt; do
+    case $opt in
+        v)
+            printVersion $progname $version
+            ;;
+    esac
+done
 
 URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 

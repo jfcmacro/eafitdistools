@@ -7,6 +7,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 08/02/2018 - Adding version
+# (jfcmacro)
 # 02/09/2017 - Correcting the path of env instead of /usr/ was /usr/bin
 # (jfcmacro)
 # 30/08/2017 - Updating
@@ -34,6 +36,7 @@ function helpInfo {
     printf "\t-c: select 'Clases' eval unit\n" >&2
     printf "\t-p: select 'Parciales' eval unit\n" >&2
     printf "\t-t: select 'Talleres' eval unit\n" >&2
+    printf "\t-v: print version\n" >&2
     printf "\t-y: select 'proYectos' eval unit\n" >&2
     printf "\t-n: <number> of eval unit\n" >&2
     printf "\t-n: <proyect-name>\n" >&2
@@ -50,13 +53,19 @@ function usage {
     exit $2
 }
 
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
+}
+
 EVALUNIT="clases"
 EVALNAME="clase"
 
 longprogname=$0
 progname=$(basename $longprogname)
+version=EDTPACKAGE
 
-while getopts "chn:ptwy" opt; do
+while getopts "chn:ptwyv" opt; do
     case $opt in
 	c)
             EVALUNIT="clases"
@@ -75,6 +84,9 @@ while getopts "chn:ptwy" opt; do
 	    ;;
         n)
             NUMBER=$OPTARG
+            ;;
+        v)
+            printVersion $progname $version
             ;;
         w)
             WRITE="true"

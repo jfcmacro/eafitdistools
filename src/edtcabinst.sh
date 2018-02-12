@@ -5,6 +5,11 @@
 # Programmer: Juan Francisco Cardona Mc'Cormick (jfcmacro)
 # purpose: Install haskell cabal packages. This is require on
 #          cygwin environment.
+#
+# Modifications:
+# (jfcmacro)
+# 08/02/2018 - Adding version
+
 OSNAME=`uname -s`
 longprogname=$0
 progname=$(basename $longprogname)
@@ -39,14 +44,20 @@ function usage {
     exit $2
 }
 
-while getopts "hvw" opt; do
+function printVersion {
+    printf "EafitDisTools ($1) Version: $2\n"
+    exit 0
+}
+
+version=EDTPACKAGE
+
+while getopts "hvwv" opt; do
     case $opt in
         h)
             usage $progname 0
             ;;
         v)
-            printf "EafitDisTools ($progname) Version: 0.0.1.19\n"
-            exit 0
+            printVersion $progname $version
             ;;
         w)
             OWINST="owinst"
