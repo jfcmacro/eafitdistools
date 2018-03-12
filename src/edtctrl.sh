@@ -8,8 +8,9 @@
 #
 # Modifications:
 # (jfcmacro)
+# 11/03/2017 - Instead of using sed -i, it was replaced with sed .. > tmpfile 
+# (jfcmacro)
 # 12/02/2018 - Adding version, change #! in order to be more generic
-
 function tolower {
     local mytolower=$(echo $1 | tr '[:upper:]' '[:lower:]')
     echo "$mytolower"
@@ -39,7 +40,11 @@ changeVar() {
 
     if [ "${tmp}" > 0 ]; then
 	aux='EDT_CURRENT_COURSE='
-	sed -i "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc
+	# sed -i "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc
+        tmpfile=$(mktemp /tmp/edtrc.XXXXXX)
+        sed "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc > $tmpfile
+        cp $tmpfile $HOME/.edtrc
+        rm $tmpfile
 	        
     fi
     source $HOME/.edtrc

@@ -165,4 +165,21 @@ case $EVALUNIT in
         ;;
 esac
 
+URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME$NUMBER/edt_script.sh
+
+echo "Getting url $URLINITSCRIPT"
+
+wget $URLSCRIPT -O edt_script.sh
+
+if [ "$?" -ne 0 ]; then
+    echo "edt_script.sh cannot be download"
+    if [ -f ./edt_script.sh ]; then
+        rm -f ./edt_script.sh
+    fi
+else
+    echo "Executing edt_script.sh"
+    bash ./edt_script.sh
+    rm -f ./edt_script.sh
+fi
+
 exec bash

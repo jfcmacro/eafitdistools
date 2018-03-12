@@ -8,6 +8,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 11/03/2018 - Adding interactive option
+# (jfcmacro)
 # 08/02/2018 - Adding version
 # (jfcmacro)
 # 24/01/2018 - Adding PATH $HOME/.local/bin
@@ -69,7 +71,8 @@ function helpInfo {
     printf "\t-b <url-base>: base URL where the course is stored on internet\n"
     printf "\t-c <course>: course id name\n"
     printf "\t-g <group>: group id name\n"
-    printf "\t-h: print this menu\n" 
+    printf "\t-h: print this menu\n"
+    printf "\t-i: interactive\n"
     printf "\t-n <username>: username on the repository\n"
     printf "\t-p <prefix>: Prefix name to identify the repository. Usually it is used to compose a reponame with prefix and username\n"
     printf "\t-r <reponame>: A reponame different of that compose with prefix and username\n"
@@ -129,6 +132,7 @@ function linkDir {
 
 function usage {
     echo "       $1 -h" >&2
+    echo "       $1 [-a] -i" >&2
     echo "       $1 -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-w <versctrl> ]" >&2
     echo "       $1 -a -b <url-base> -c <course> -g <group> [-n username] [-p prefix] [-r reponame] -u <url-versctrl> [-w <versctrl> ]" >&2
     echo "       $1 -v" >&2
@@ -147,12 +151,58 @@ function printVersion {
     exit 0
 }
 
+function readDefVar {
+    local tmp
+    printf $1 $2
+    read tmp
+    ${tmp:-$2}
+}
+
+function interactive {
+    echo "interactive"
+    local tmp
+    printf "URL-BASE(%s): " $URLBASE
+    read tmp
+    URLBASE=${tmp:-$URLBASE}
+    unset tmp
+    printf "COURSE(%s): " $COURSE
+    read tmp
+    COURSE=${tmp:-$COURSE}
+    COURSELOWER=$(tolower $COURSE)
+    unset tmp
+    printf "GROUP(%s): " $GROUP
+    read tmp
+    GROUP=${tmp:-$GROUP}
+    unset tmp
+    printf "USERNAME(%s): " $USERNAME
+    read tmp
+    USERNAME=${tmp:-$USERNAME}
+    unset tmp
+    PREFIX=${COURSE:3}${YEAR:3}${TERM:1}${GROUP:2}
+    printf "PREFIX(%s): " $PREFIX
+    read tmp
+    PREFIX=${tmp:-$PREFIX}
+    unset tmp
+    REPONAME=${PREFIX}${USERNAME}
+    printf "REPONAME(%s): " $REPONAME
+    read tmp
+    REPONAME=${tmp:-$REPONAME}
+    unset tmp
+    printf "URL-VERSCTRL(%s): " $URLVERSCTRL
+    read tmp
+    URLVERSCTRL=${tmp:-$URLVERSCTRL}
+    unset tmp
+    printf "VERSCTRL(%s): " $VERSCTRL
+    read tmp
+    VERSCTRL=${tmp:-$VERSCTRL}
+}
+
 version=EDTPACKAGE
 
 longprogname=$0
 progname=$(basename $longprogname)
 
-while getopts "ab:c:g:hn:p:r:u:vw:" opt; do
+while getopts "ab:c:g:hin:p:r:u:vw:" opt; do
     case $opt in
         a)
             ADDCOURSE="add"
@@ -170,6 +220,9 @@ while getopts "ab:c:g:hn:p:r:u:vw:" opt; do
 	h)
 	    usage $progname 0
 	    ;;
+        i)
+            INTERACTIVE="true"
+            ;;
         n)
             SVNUSERNAME=$OPTARG
             ;;
@@ -211,6 +264,18 @@ else
     #         exit 1
     #     fi
     fi
+fi
+
+if [ -n "${INTERACTIVE}" ]; then
+    URLBASE="http://www1.eafit.edu.co/fcardona"
+    COURSE="ST0244"
+    GROUP="031"
+    USERNAME=`id -un`
+    PREFIX=${COURSE:3}${YEAR:3}${TERM:1}${GROUP:2}
+    REPONAME=${PREFIX}${USERNAME}
+    URLVERSCTRL="https://svn.riouxsvn.com"
+    VERSCTRL="svn"
+    interactive
 fi
 
 if [ -z "${URLBASE}" -o -z "${COURSE}" -o -z "${GROUP}" -o -z "${URLVERSCTRL}" ]; then
@@ -327,7 +392,11 @@ EOF
 else
     tmp=$(grep -c "$COURSE" $HOME/.edtrc)
     if [ "${tmp}" -eq 0 ]; then
-        sed -i "s/\(EDT_COURSES=.*$\)/\1:${COURSE}/g" $HOME/.edtrc  
+        # sed -i "s/\(EDT_COURSES=.*$\)/\1:${COURSE}/g" $HOME/.edtrc
+        tmpfile=$(mktemp /tmp/edtrc.XXXXXX)
+        sed "s/\(EDT_COURSES=.*$\)/\1:${COURSE}/g" $HOME/.edtrc > $tmpfile
+        cp $tmpfile $HOME/.edtrc
+        rm $tmpfile
         cat >> $HOME/.edtrc <<EOF 
 # Adding EDT variables for course: ${COURSE} $(date '+%Y/%m/%d-%H:%M:%S')
 export EDT_${COURSE}_URL_BASE=${URLBASE}

@@ -79,6 +79,7 @@ COURSE=$EDT_CURRENT_COURSE
 COURSELOWER=$(tolower $COURSE)
 tmp="EDT_${COURSE}_REPONAME"
 eval REPONAME='$'$tmp
+eval COURSE_REPONAME='$'$tmp
 tmp="EDT_${COURSE}_USERNAME"
 eval USERNAME='$'$tmp
 tmp="EDT_${COURSE}_URL_BASE"
@@ -133,12 +134,16 @@ then
     exit 1
 fi
 
-cd $REPONAME
 
 # Checking directories
-for i in configuracion proyectos parciales seguimientos clases talleres
-do
-    createSvnDir $i
-done
+if [ "$REPONAME" == "$COURSE_REPONAME" ]
+then
+    cd $REPONAME
 
-svn ci -m "Adding created directories to the repositories" --username $USERNAME
+    for i in configuracion proyectos parciales seguimientos clases talleres
+    do
+        createSvnDir $i
+    done
+
+    svn ci -m "Adding created directories to the repositories" --username $USERNAME
+fi
