@@ -7,6 +7,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 20/06/2018 - Adding new option c to avoid unnecessary directories created
+# (jfcmacro)
 # 08/02/2018 - Adding version
 # (jfcmacro)
 # 24/01/2018 - Adding PATH $HOME/.local/bin
@@ -46,6 +48,7 @@ function helpInfo {
     printf "\t-r: set the repository name and shows a summary of variable values\n"
     printf "\t-n: set the username\n"
     printf "\t-u: set the version control\n"
+    printf "\t-c: create a serie of directories and add to the repository\n"
 }
 
 function usage {
@@ -53,6 +56,8 @@ function usage {
     printf "\t$1 [-r]\n" >&2
     printf "\t$1 [-n]\n" >&2
     printf "\t$1 [-u]\n" >&2
+    printf "\t$1 [-c]\n" >&2
+    
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
@@ -89,12 +94,16 @@ eval URLVERSIONCONTROL='$'$tmp
 
 longprogname=$0
 progname=$(basename $longprogname)
+createdirs=false
 
-while getopts "hr:u:n:v" opt; do
+while getopts "hcr:u:n:v" opt; do
     case $opt in
         h)
             usage $progname 0
             ;;
+	c)
+	    createdirs=true
+	    ;;
 	n)
 	    USERNAME=$OPTARG
 	    ;;
@@ -140,10 +149,13 @@ if [ "$REPONAME" == "$COURSE_REPONAME" ]
 then
     cd $REPONAME
 
-    for i in configuracion proyectos parciales seguimientos clases talleres
-    do
-        createSvnDir $i
-    done
+    if [ "$createdirs" = true ]; then
+	
+	for i in configuracion proyectos parciales seguimientos clases talleres
+	do
+            createSvnDir $i
+	done
 
-    svn ci -m "Adding created directories to the repositories" --username $USERNAME
+        svn ci -m "Adding created directories to the repositories" --username $USERNAME
+    fi
 fi
