@@ -7,6 +7,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 13/07/2018 - Taking in count Subversion good practices (trunk,branch,tag) 
+# (jfcmacro)
 # 20/06/2018 - Adding new option c to avoid unnecessary directories created
 # (jfcmacro)
 # 08/02/2018 - Adding version
@@ -132,9 +134,31 @@ done
 
 cd $HOME/$COURSELOWER
 
-if [ -n "${REPONAME}" ]
+if [ -d "${REPONAME}" ]
 then
-    svn co $URLVERSIONCONTROL/$REPONAME --username $USERNAME
+    cd $REPONAME
+    svn up --username $USERNAME
+else
+    if [ -n "${REPONAME}" ]
+    then
+        if [[ $REPONAME =~ (.tag.|.branch.) ]]
+        then
+            svn co $URLVERSIONCONTROL/$REPONAME --username $USERNAME
+        else
+            if [[ $REPONAME =~ .trunk. ]]
+            then
+                svn co $URLVERSIONCONTROL/$REPONAME --username $USERNAME
+            else
+                svn info $URLVERSIONCONTROL/$REPONAME/trunk --username $USERNAME 2>&1 1>/dev/null
+                if [ "$?" -eq 0 ]
+                then
+                    svn co $URLVERSIONCONTROL/$REPONAME/trunk $REPONAME --username $USERNAME
+                else
+                    svn co $URLVERSIONCONTROL/$REPONAME --username $USERNAME
+                fi
+            fi 
+        fi
+    fi
 fi
 
 if [ "$?" -ne 0 ]

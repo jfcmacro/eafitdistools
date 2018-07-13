@@ -169,17 +169,21 @@ URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME$NUMBER/edt_script.sh
 
 echo "Getting url $URLINITSCRIPT"
 
-wget $URLSCRIPT -O edt_script.sh
+if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
+then
 
-if [ "$?" -ne 0 ]; then
-    echo "edt_script.sh cannot be download"
-    if [ -f ./edt_script.sh ]; then
+    wget $URLSCRIPT -O edt_script.sh
+
+    if [ "$?" -ne 0 ]; then
+        echo "edt_script.sh cannot be download"
+        if [ -f ./edt_script.sh ]; then
+            rm -f ./edt_script.sh
+        fi
+    else
+        echo "Executing edt_script.sh"
+        bash ./edt_script.sh
         rm -f ./edt_script.sh
     fi
-else
-    echo "Executing edt_script.sh"
-    bash ./edt_script.sh
-    rm -f ./edt_script.sh
 fi
 
 exec bash
