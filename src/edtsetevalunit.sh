@@ -165,7 +165,14 @@ case $EVALUNIT in
         ;;
 esac
 
-URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME$NUMBER/edt_script.sh
+case $EVALUNIT in
+    proyectos)
+        URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME/edt_script.sh
+        ;;
+    *)
+        URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME$NUMBER/edt_script.sh
+        ;;
+esac
 
 echo "Getting url $URLSCRIPT"
 
