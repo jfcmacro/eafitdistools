@@ -55,9 +55,9 @@ function helpInfo {
 
 function usage {
     printf "\t$1 -h\n" >&2
-    printf "\t$1 [-r]\n" >&2
-    printf "\t$1 [-n]\n" >&2
-    printf "\t$1 [-u]\n" >&2
+    printf "\t$1 [-r <reponame>]\n" >&2
+    printf "\t$1 [-n <username>]\n" >&2
+    printf "\t$1 [-u (git|svn)]\n" >&2
     printf "\t$1 [-c]\n" >&2
     
     if [ "$2" -eq 0 ]; then
@@ -171,8 +171,6 @@ fi
 # Checking directories
 if [ "$REPONAME" == "$COURSE_REPONAME" ]
 then
-    cd $REPONAME
-
     if [ "$createdirs" = true ]; then
 	
 	for i in configuracion proyectos parciales seguimientos clases talleres

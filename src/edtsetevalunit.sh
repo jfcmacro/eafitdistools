@@ -167,7 +167,7 @@ esac
 
 URLSCRIPT=$URLBASE/courses/$COURSELOWER/$EVALUNIT/$EVALNAME$NUMBER/edt_script.sh
 
-echo "Getting url $URLINITSCRIPT"
+echo "Getting url $URLSCRIPT"
 
 if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
 then
