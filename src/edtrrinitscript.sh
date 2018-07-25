@@ -58,19 +58,18 @@ URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 cd $HOME
 echo "Getting url $URLINITSCRIPT"
 
-wget $URLINITSCRIPT -O edt_init_script.sh
+if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
+then
+    
+    wget $URLINITSCRIPT -O edt_init_script.sh
 
-if [ "$?" -ne 0 ]; then
-    echo "edt_init_script.sh cannot be download"
-    if [ -f edt_init_script.sh ]; then
-        rm -f edt_init_script.sh
-    fi
-else
     if [ -f edt_init_script.sh ]; then
         echo "Executing edt_init_script.sh"
         bash $HOME/edt_init_script.sh
         rm -f edt_init_script.sh
     fi
+else
+    echo "edt_init_script.sh cannot be download"
 fi
 
 createDir $COURSELOWER

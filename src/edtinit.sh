@@ -323,12 +323,24 @@ case $OSNAME in
             fi
         fi
         ;;
+    DARWIN*)
+        if [ -z "${JAVA_HOME}" ]; then
+            if [ -x "$(command -v javac)" ]; then
+                TMP=$(command -v javac)
+                TMP2=$(dirname $TMP)
+                appendFile "export JAVA_HOME=$TMP2" .bash_profile
+                source .bash_profile
+            else
+                echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
+            fi
+        fi
+        ;;
     *)
         if [ -z "${JAVA_HOME}" ]; then
             if [ -x "$(command -v javac)" ]; then
                 TMP=$(command -v javac)
                 TMP2=$(dirname $TMP)
-                append "export JAVA_HOME=$TMP2" .bashrc
+                appendFile "export JAVA_HOME=$TMP2" .bashrc
                 source .bashrc
             else
                 echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
@@ -370,7 +382,14 @@ cd $HOME
 
 tmp=$(grep -c "\$HOME/share/man" $HOME/.bashrc)
 if [ "${tmp}" -eq 0 ]; then
-    appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
+    case $OSNAME in
+        DARWIN*)
+            appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bash_profile
+            ;;
+        *)
+            appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
+            ;;
+    esac
 fi
 
 if [ -z "${ADDCOURSE}" ]; then
@@ -388,7 +407,14 @@ export EDT_${COURSE}_REPONAME=${REPONAME}
 export EDT_${COURSE}_PREFIX_REPO=${PREFIX}
 export EDT_${COURSE}_VERSION_CONTROL=${VERSCTRL}
 EOF
-    appendFile ". \$HOME/.edtrc" $HOME/.bashrc
+    case $OSNAME in
+        DARWIN*)
+            appendFile ". \$HOME/.edtrc" $HOME/.bash_profile
+            ;;
+        *)
+            appendFile ". \$HOME/.edtrc" $HOME/.bashrc
+            ;;
+    esac
 else
     tmp=$(grep -c "$COURSE" $HOME/.edtrc)
     if [ "${tmp}" -eq 0 ]; then
@@ -416,17 +442,20 @@ URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 
 echo "Getting url $URLINITSCRIPT"
 
-wget $URLINITSCRIPT -O edt_init_script.sh
+if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
+then 
+    wget $URLINITSCRIPT -O edt_init_script.sh
 
-if [ "$?" -ne 0 ]; then
-    echo "edt_init_script.sh cannot be download"
-    if [ -f edt_init_script.sh ]; then
+    if [ "$?" -ne 0 ]; then
+        echo "edt_init_script.sh cannot be download"
+        if [ -f edt_init_script.sh ]; then
+            rm -f edt_init_script.sh
+        fi
+    else
+        echo "Executing edt_init_script.sh"
+        bash $HOME/edt_init_script.sh
         rm -f edt_init_script.sh
     fi
-else
-    echo "Executing edt_init_script.sh"
-    bash $HOME/edt_init_script.sh
-    rm -f edt_init_script.sh
 fi
 
 createDir $COURSELOWER
