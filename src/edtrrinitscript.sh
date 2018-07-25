@@ -58,7 +58,7 @@ URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 cd $HOME
 echo "Getting url $URLINITSCRIPT"
 
-if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
+if [[ `wget -S --spider $URLINITSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
 then
     
     wget $URLINITSCRIPT -O edt_init_script.sh
