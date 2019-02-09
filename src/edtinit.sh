@@ -161,38 +161,38 @@ function readDefVar {
 function interactive {
     echo "interactive"
     local tmp
-    printf "URL-BASE(%s): " $URLBASE
+    printf "URL-BASE(%s)[enter default]: " $URLBASE
     read tmp
     URLBASE=${tmp:-$URLBASE}
     unset tmp
-    printf "COURSE(%s): " $COURSE
+    printf "COURSE(%s)[enter default]: " $COURSE
     read tmp
     COURSE=${tmp:-$COURSE}
     COURSELOWER=$(tolower $COURSE)
     unset tmp
-    printf "GROUP(%s): " $GROUP
+    printf "GROUP(%s)[enter default]: " $GROUP
     read tmp
     GROUP=${tmp:-$GROUP}
     unset tmp
-    printf "USERNAME(%s): " $USERNAME
+    printf "USERNAME(%s)[enter default]: " $USERNAME
     read tmp
     USERNAME=${tmp:-$USERNAME}
     unset tmp
     PREFIX=${COURSE:3}${YEAR:3}${TERM:1}${GROUP:2}
-    printf "PREFIX(%s): " $PREFIX
+    printf "PREFIX(%s)[enter default]: " $PREFIX
     read tmp
     PREFIX=${tmp:-$PREFIX}
     unset tmp
     REPONAME=${PREFIX}${USERNAME}
-    printf "REPONAME(%s): " $REPONAME
+    printf "REPONAME(%s)[enter default]: " $REPONAME
     read tmp
     REPONAME=${tmp:-$REPONAME}
     unset tmp
-    printf "URL-VERSCTRL(%s): " $URLVERSCTRL
+    printf "URL-VERSCTRL(%s)[enter default]: " $URLVERSCTRL
     read tmp
     URLVERSCTRL=${tmp:-$URLVERSCTRL}
     unset tmp
-    printf "VERSCTRL(%s): " $VERSCTRL
+    printf "VERSCTRL(%s)[enter default]: " $VERSCTRL
     read tmp
     VERSCTRL=${tmp:-$VERSCTRL}
 }
