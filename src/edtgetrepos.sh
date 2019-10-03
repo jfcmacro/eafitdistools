@@ -7,7 +7,7 @@
 #
 # Modifications:
 # (jfcmacro)
-# 13/07/2018 - Taking in count Subversion good practices (trunk,branch,tag) 
+# 13/07/2018 - Taking in count Subversion good practices (trunk,branch,tag)
 # (jfcmacro)
 # 20/06/2018 - Adding new option c to avoid unnecessary directories created
 # (jfcmacro)
@@ -40,11 +40,11 @@ function createDir {
 function createSvnDir {
     if [ ! -d $1 ]
     then
-	svn mkdir $1 
+	svn mkdir $1
     fi
 }
 
-function helpInfo {   
+function helpInfo {
     printf "options:\n" >&2
     printf "\t-h: prints the help\n"
     printf "\t-r: set the repository name and shows a summary of variable values\n"
@@ -59,7 +59,7 @@ function usage {
     printf "\t$1 [-n <username>]\n" >&2
     printf "\t$1 [-u (git|svn)]\n" >&2
     printf "\t$1 [-c]\n" >&2
-    
+
     if [ "$2" -eq 0 ]; then
         helpInfo
     fi
@@ -119,7 +119,7 @@ while getopts "hcr:u:n:v" opt; do
             echo "urlbase: $URLBASE"
             echo "urlversioncontrol: $URLVERSIONCONTROL"
             ;;
-	
+
 	u)
 	    URLVERSIONCONTROL=$OPTARG
 	    ;;
@@ -156,7 +156,7 @@ else
                 else
                     svn co $URLVERSIONCONTROL/$REPONAME --username $USERNAME
                 fi
-            fi 
+            fi
         fi
     fi
 fi
@@ -172,7 +172,7 @@ fi
 if [ "$REPONAME" == "$COURSE_REPONAME" ]
 then
     if [ "$createdirs" = true ]; then
-	
+
 	for i in configuracion proyectos parciales seguimientos clases talleres
 	do
             createSvnDir $i

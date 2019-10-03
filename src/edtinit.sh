@@ -8,6 +8,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 09/02/2019 - Store configuration files on .bash_profile
+# (jfcmacro)
 # 11/03/2018 - Adding interactive option
 # (jfcmacro)
 # 08/02/2018 - Adding version
@@ -258,11 +260,6 @@ else
     if [ -n "${ADDCOURSE}" -a ! -f $HOME/.edtrc ]; then
         echo "$HOME/.edtrc doesn't exist. To add course first, init the $HOME/.edtrc file" >&2
         exit 1
-    # else
-    #     if [ - -f $HOME/.edtrc ]; then
-    #         echo "$HOME/.edtrc exists" >&2
-    #         exit 1
-    #     fi
     fi
 fi
 
@@ -292,10 +289,10 @@ fi
 
 cd $HOME
 
-if [ -f .bashrc ]; then
-    tmp=$(grep -c "\$HOME/bin" $HOME/.bashrc)
+if [ -f .bash_profile ]; then
+    tmp=$(grep -c "\$HOME/bin" $HOME/.bash_profile)
     if [ "${tmp}" -eq 0 ]; then
-        appendFile "export PATH=\$HOME/bin:\$PATH:\$HOME/.local/bin" .bashrc
+        appendFile "export PATH=\$HOME/bin:\$PATH:\$HOME/.local/bin" .bash_profile
     fi
 fi
 
@@ -306,17 +303,17 @@ case $OSNAME in
             JAVA_VERSION=$(ls /cygdrive/c/Program\ Files/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
             if [ -n "${JAVA_VERSION}" ]; then
 
-	        appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bashrc
-	        appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
-                #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
-	        source .bashrc
+	        appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files/Java/jdk$JAVA_VERSION/" .bash_profile
+	        appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bash_profile
+                #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bash_profile
+	        source .bash_profile
             else
                 JAVA_VERSION=$(ls /cygdrive/c/Program\ Files\ \(x86\)/Java/ | grep jdk | sed 's/jdk//g' | sort -ru | head -n 1)
                 if [ - "${JAVA_VERSION}" ]; then
-                    appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files\ \(x86\)/Java/jdk$JAVA_VERSION/" .bashrc
-	            appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bashrc
-                    #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bashrc
-	            source .bashrc
+                    appendFile "export JAVA_HOME=/cygdrive/c/Program\ Files\ \(x86\)/Java/jdk$JAVA_VERSION/" .bash_profile
+	            appendFile "export PATH=\$PATH:\$JAVA_HOME/bin" .bash_profile
+                    #    echo "export CLASSPATH=\$(cygpath -pw .:\$CLASSPATH)">> .bash_profile
+	            source .bash_profile
                 else
                     echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
                 fi
@@ -340,8 +337,8 @@ case $OSNAME in
             if [ -x "$(command -v javac)" ]; then
                 TMP=$(command -v javac)
                 TMP2=$(dirname $TMP)
-                appendFile "export JAVA_HOME=$TMP2" .bashrc
-                source .bashrc
+                appendFile "export JAVA_HOME=$TMP2" .bash_profile
+                source .bash_profile
             else
                 echo "You don't have Java SDK installed on the usual directories, please install one on them" >&2
             fi
@@ -360,25 +357,13 @@ case $OSNAME in
         linkDir AppData appdata $USERNAME
         linkDir Documents docs $USERNAME
         linkDir Desktop escritorio $USERNAME
-        linkDir Downloads descargas $USERNAME
+        linkDir Downloads desc $USERNAME
         ;;
     *)
         ;;
 esac
 
 cd $HOME
-
-# This was move to another script
-# if  [ ! -x "$(command -v ewe)" ]; then
-#     if [ -x "$(command -v cabal)" ]; then
-# 	echo "Installing ewe last version, it takes few minutes, please wait."
-# 	cabal update
-# 	cabal install ewe --prefix $(cygpath -w $HOME)
-# 	source .bashrc
-#     else
-# 	echo "Please install Haskell Platform before install ewe" >&2
-#     fi
-# fi
 
 tmp=$(grep -c "\$HOME/share/man" $HOME/.bashrc)
 if [ "${tmp}" -eq 0 ]; then
@@ -387,7 +372,7 @@ if [ "${tmp}" -eq 0 ]; then
             appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bash_profile
             ;;
         *)
-            appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bashrc
+            appendFile "export MANPATH=\$MANPATH:\$HOME/share/man" $HOME/.bash_profile
             ;;
     esac
 fi
@@ -412,7 +397,7 @@ EOF
             appendFile ". \$HOME/.edtrc" $HOME/.bash_profile
             ;;
         *)
-            appendFile ". \$HOME/.edtrc" $HOME/.bashrc
+            appendFile ". \$HOME/.edtrc" $HOME/.bash_profile
             ;;
     esac
 else
@@ -423,7 +408,7 @@ else
         sed "s/\(EDT_COURSES=.*$\)/\1:${COURSE}/g" $HOME/.edtrc > $tmpfile
         cp $tmpfile $HOME/.edtrc
         rm $tmpfile
-        cat >> $HOME/.edtrc <<EOF 
+        cat >> $HOME/.edtrc <<EOF
 # Adding EDT variables for course: ${COURSE} $(date '+%Y/%m/%d-%H:%M:%S')
 export EDT_${COURSE}_URL_BASE=${URLBASE}
 export EDT_${COURSE}_GROUP=${GROUP}
@@ -443,7 +428,7 @@ URLINITSCRIPT=$URLBASE/courses/$COURSELOWER/edt_init_script.sh
 echo "Getting url $URLINITSCRIPT"
 
 if [[ `wget -S --spider $URLSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
-then 
+then
     wget $URLINITSCRIPT -O edt_init_script.sh
 
     if [ "$?" -ne 0 ]; then

@@ -10,7 +10,7 @@
 # (jfcmacro)
 # 24/07/2018 - Show more courses and options
 # (jfcmacro)
-# 11/03/2017 - Instead of using sed -i, it was replaced with sed .. > tmpfile 
+# 11/03/2017 - Instead of using sed -i, it was replaced with sed .. > tmpfile
 # (jfcmacro)
 # 12/02/2017 - Adding version, change #! in order to be more generic
 
@@ -70,7 +70,6 @@ changeVar() {
         sed "/${aux}.*/s/$EDT_CURR_COURSE/${aux}${COURSE}/g" $HOME/.edtrc > $tmpfile
         cp $tmpfile $HOME/.edtrc
         rm $tmpfile
-	        
     fi
     source $HOME/.edtrc
 }
@@ -85,7 +84,7 @@ changeYearVar() {
         sed "/${aux}.*/s/$EDT_CURR_YEAR/${aux}${YEAR}/g" $HOME/.edtrc > $tmpfile
         cp $tmpfile $HOME/.edtrc
         rm $tmpfile
-	        
+
     fi
     source $HOME/.edtrc
 }
@@ -157,7 +156,7 @@ while getopts "hrc:ivy" opt; do
 		    COURSE=$course
 		    break
 		fi
-		
+
 	    done
 	    changeVar
 	    ;;
@@ -178,4 +177,4 @@ while getopts "hrc:ivy" opt; do
 	    exit 1
 	    ;;
     esac
-done 
+done

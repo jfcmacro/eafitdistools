@@ -7,6 +7,8 @@
 #
 # Modifications:
 # (jfcmacro)
+# 09/02/2019 - Deleting trailing whitspaces
+# (jfcmacro)
 # 08/02/2018 - Adding version
 
 function tolower {
@@ -60,7 +62,7 @@ echo "Getting url $URLINITSCRIPT"
 
 if [[ `wget -S --spider $URLINITSCRIPT  2>&1 | grep 'HTTP/1.1 200 OK'` ]]
 then
-    
+
     wget $URLINITSCRIPT -O edt_init_script.sh
 
     if [ -f edt_init_script.sh ]; then
