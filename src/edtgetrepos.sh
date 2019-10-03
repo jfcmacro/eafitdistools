@@ -167,7 +167,6 @@ then
     exit 1
 fi
 
-
 # Checking directories
 if [ "$REPONAME" == "$COURSE_REPONAME" ]
 then
